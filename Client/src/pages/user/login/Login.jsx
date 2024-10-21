@@ -13,11 +13,30 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [errors, setErrors] = useState({});
+
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle login logic here
-        console.log('Login submitted', { email, password });
+
+        let formErrors = {};
+        
+        if (!email || !validateEmail(email)) {
+            formErrors.email = 'Please enter a valid email address.';
+        }
+        if (!password || password.length < 6) {
+            formErrors.password = 'Password must be at least 6 characters long.';
+        }
+
+        if (Object.keys(formErrors).length === 0) {
+            console.log('Login submitted', { email, password });
+        } else {
+            setErrors(formErrors);
+        }
     };
 
     const handleRegisterClick = () => {
@@ -45,8 +64,9 @@ const Login = () => {
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Email"
                             className={styles.input}
-                            required
+                            // required
                         />
+                        {errors.email && <p className={styles.error}>{errors.email}</p>}
                     </div>
                     <div className={styles.inputContainer}>
                         <TfiLock className={styles.iconPassword}/>
@@ -56,7 +76,7 @@ const Login = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Password"
                             className={styles.input}
-                            required
+                            // required
                         />
                         <button
                             type="button"
@@ -65,6 +85,7 @@ const Login = () => {
                         >
                             {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye /> }
                         </button>
+                        {errors.password && <p className={styles.error}>{errors.password}</p>}
                     </div>
                     <button type="submit" className={styles.loginButton}>
                         Log in

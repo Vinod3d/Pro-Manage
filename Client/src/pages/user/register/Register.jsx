@@ -18,6 +18,7 @@ const Register = () => {
         confirmPassword: ''
     });
     const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [errors, setErrors] = useState({});
 
     const validateEmail = (email) => {
@@ -126,7 +127,7 @@ const Register = () => {
                     <div className={styles.inputContainer}>
                         <TfiLock className={styles.iconPassword}/>
                         <input
-                            type={showPassword ? 'text' : 'password'}
+                            type={showConfirmPassword ? 'text' : 'password'}
                             name="confirmPassword"
                             value={formData.confirmPassword}
                             onChange={handleInputChange}
@@ -136,10 +137,10 @@ const Register = () => {
                         />
                         <button
                             type="button"
-                            onClick={() => setShowPassword(!showPassword)}
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                             className={styles.showPasswordButton}
                         >
-                            {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye /> }
+                            {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye /> }
                         </button>
                         {errors.confirmPassword && <p className={styles.error}>{errors.confirmPassword}</p>}
                     </div>
