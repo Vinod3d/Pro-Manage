@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from '../login.module.css'
 import { AstroBack, Astronaut } from '../../../assets/Index.js';
 import { AiOutlineEye } from "react-icons/ai";
@@ -6,6 +6,9 @@ import { AiOutlineEyeInvisible } from "react-icons/ai";
 import { MdOutlineMail } from "react-icons/md";
 import { TfiLock } from "react-icons/tfi";
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearErrors, clearMessage, loginUser } from '../../../store/slices/userSlice.js';
+import { toast } from 'react-toastify';
 
 
 const Login = () => {
@@ -14,6 +17,10 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState({});
+    const dispatch = useDispatch();
+    const {loading, isAuthenticated, error, message} = useSelector(
+        (state)=> state.user
+      );
 
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,11 +40,31 @@ const Login = () => {
         }
 
         if (Object.keys(formErrors).length === 0) {
-            console.log('Login submitted', { email, password });
+            dispatch(loginUser(email, password))
+
         } else {
             setErrors(formErrors);
         }
     };
+
+    useEffect(()=>{
+        
+        if(message){
+            toast.success(message)
+            console.log(message)
+            dispatch(clearMessage());
+        }
+
+        if(isAuthenticated){
+            navigate('/Dashboard')
+        }
+        
+        if(error){
+         toast.error(error)
+         dispatch(clearErrors());
+        }
+    },[dispatch,  isAuthenticated, navigate, message, error])
+
 
     const handleRegisterClick = () => {
         navigate('/register');
@@ -87,8 +114,8 @@ const Login = () => {
                         </button>
                         {errors.password && <p className={styles.error}>{errors.password}</p>}
                     </div>
-                    <button type="submit" className={styles.loginButton}>
-                        Log in
+                    <button type="submit" className={styles.loginButton} disabled={loading}>
+                        {loading ? "Logging..." : "Login"}
                     </button>
                 </form>
                 <p className={styles.registerText}>

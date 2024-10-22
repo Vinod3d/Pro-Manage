@@ -4,8 +4,14 @@ import connectDB from './db/ConnectDB.js';
 import cookieParser from 'cookie-parser';
 import userRoutes from './routes/userRoutes.js'
 import errorHandler from './middleware/errorHandlers.js';
+import cors from 'cors';
 
 const app = express();
+app.use(cors({
+    origin: 'http://localhost:5173',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true
+}));
 const PORT = APP_PORT;
 app.use(express.json());
 app.use(cookieParser(JWT_KEY));
