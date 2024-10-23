@@ -3,6 +3,8 @@ import Login from './pages/user/login/Login'
 import Register from './pages/user/register/register'
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import NotFound from './pages/not_found/NotFound';
+import Dashboard from './pages/Dashboard/Dashboard';
 
 
 function App() {
@@ -10,9 +12,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Login/>}/>
+        <Route path='/' element={<Dashboard/>}/>
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
+        <Route path='*' element={<NotFound/>}/>
       </Routes>
       <ToastContainer position='top-right' />
     </BrowserRouter>

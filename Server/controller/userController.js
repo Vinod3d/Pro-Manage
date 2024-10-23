@@ -58,6 +58,27 @@ export const login = async (req, res, next)=>{
     }
 }
 
+// LOGOUT USER
+
+export const logout = async (req, res, next) => {
+    try {
+        res.clearCookie("token", {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+        });
+    
+        res.status(200).json({
+            success: true,
+            message: "logged out",
+        });
+    } 
+    
+    catch (error) {
+        return next(error);
+    }
+};
+
 
 // GET ALL USERS
 

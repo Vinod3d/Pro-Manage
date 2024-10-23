@@ -56,7 +56,7 @@ const Login = () => {
         }
 
         if(isAuthenticated){
-            navigate('/Dashboard')
+            navigate('/')
         }
         
         if(error){
