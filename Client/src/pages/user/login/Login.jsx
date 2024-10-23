@@ -51,8 +51,8 @@ const Login = () => {
         
         if(message){
             toast.success(message)
-            console.log(message)
             dispatch(clearMessage());
+            navigate('/')
         }
 
         if(isAuthenticated){
@@ -91,6 +91,7 @@ const Login = () => {
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Email"
                             className={styles.input}
+                            autoComplete='username'
                             // required
                         />
                         {errors.email && <p className={styles.error}>{errors.email}</p>}
@@ -103,6 +104,7 @@ const Login = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Password"
                             className={styles.input}
+                            autoComplete="current-password"
                             // required
                         />
                         <button

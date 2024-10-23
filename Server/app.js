@@ -3,6 +3,7 @@ import { APP_PORT, JWT_KEY, MONGO_URI } from './config/Index.js';
 import connectDB from './db/ConnectDB.js';
 import cookieParser from 'cookie-parser';
 import userRoutes from './routes/userRoutes.js'
+import checkSessionRoute from './routes/checkSession.js'
 import errorHandler from './middleware/errorHandlers.js';
 import cors from 'cors';
 
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
 
 // ROUTES
 app.use('/api/user', userRoutes)
+app.use('/api', checkSessionRoute)
 app.use(errorHandler)
 
 const start = async ()=>{

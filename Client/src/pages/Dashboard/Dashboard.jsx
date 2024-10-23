@@ -1,23 +1,54 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Analytics, Board, logo, settings } from '../../assets/Index'
 import { TbLogout } from "react-icons/tb";
 import styles from './Dashboard.module.css'
+import BoardComponent from '../../components/Board/Board';
+import AnalyticsComponent from '../../components/Analytics/Analytics';
+import SettingsComponent from '../../components/Settings/Settings';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearErrors, clearMessage, logout } from '../../store/slices/userSlice';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
     const [selectedTab, setSelectedTab] = useState('Board');
+    const dispatch = useDispatch()
+    const {isAuthenticated , error, message} = useSelector((state)=>state.user)
+    const navigate = useNavigate()
+    
 
     const mainContent = () => {
         switch (selectedTab) {
           case 'Board':
-            return <div>Board Content</div>
+            return <BoardComponent/>
           case 'Analytics':
-            return <div>Analytics Content</div>
+            return <AnalyticsComponent/>
           case 'Settings':
-            return <div>Settings Content</div>
+            return <SettingsComponent/>
           default:
             return <div>Board Content</div>
         }
     }
+
+    const handleLogout = () =>{
+        dispatch(logout())
+    }
+
+    useEffect(()=>{
+        if(!isAuthenticated){
+            navigate('/login')
+        }
+        if(error){
+            toast.error(error)
+            dispatch(clearErrors());
+        }
+
+        if(message){
+            toast.success(message);
+            dispatch(clearMessage())
+            navigate('/login')
+        }
+    },[error, message, dispatch, navigate, isAuthenticated])
 
 
   return (
@@ -45,7 +76,7 @@ const Dashboard = () => {
           ))}
         </nav>
         <div className={styles.logout}>
-          <button className={styles.logoutButton}>
+          <button className={styles.logoutButton} onClick={handleLogout}>
             <TbLogout className={styles.logoutButtonIcon} />
             Log out
           </button>

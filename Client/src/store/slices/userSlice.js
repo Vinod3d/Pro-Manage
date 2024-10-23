@@ -66,17 +66,29 @@ const userSlice = createSlice({
         // Logout
 
         logoutSuccess: (state, action)=>{
-            state.user = null;
+            state.user = action.payload.success && null;
             state.isAuthenticated = false;
             state.error = null;
             state.message = action.payload.message;
         },
 
         logoutFailed: (state, action)=>{
+            console.log(action.payload)
             state.user = null;
             state.isAuthenticated = false;
             state.error = action.payload;
             state.message = null;
+        },
+
+
+        checkSession: (state, action)=>{
+            state.isAuthenticated = action.payload.loggedIn && true;
+            state.user = action.payload.user ? action.payload.user : null;
+        },
+
+        checkSessionFailed: (state, action)=>{
+            state.isAuthenticated = false;
+            state.error = action.payload;
         },
 
 
@@ -127,8 +139,6 @@ export const loginUser = (email, password) => async (dispatch) =>{
             }
         );
 
-        console.log(response)
-
         dispatch(userSlice.actions.loginSuccess(response.data));
         dispatch(userSlice.actions.clearErrors());
 
@@ -143,6 +153,7 @@ export const logout = () => async (dispatch) =>{
             withCredentials: true,
         });
 
+
         dispatch(userSlice.actions.logoutSuccess(response.data));
         dispatch(userSlice.actions.clearErrors());
         
@@ -150,6 +161,20 @@ export const logout = () => async (dispatch) =>{
         dispatch(userSlice.actions.logoutFailed(error.response.data.message))
     }
 
+}
+
+export const checkAuthSession = () => async(dispatch) =>{
+    try {
+        const response = await axios.get(`${baseUrl}/api/check-session`, {
+            withCredentials: true,
+        });
+
+        console.log(response)
+
+        dispatch(userSlice.actions.checkSession(response.data))
+    } catch (error) {
+        dispatch(userSlice.actions.checkSessionFailed(error.response.data.message))
+    }
 }
 
 export const clearErrors = () => (dispatch) => {
