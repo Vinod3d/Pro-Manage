@@ -1,0 +1,61 @@
+
+.headerContainer {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0rem;
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    /* z-index: 10; */
+}
+  
+.headerTitle {
+    font-family: var(--primary-font);
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 33px;
+}
+  
+.headerTitle2 {
+    font-family: var(--primary-font);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 44px;
+}
+
+.headerGroup{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: center;
+}
+
+.addPeople{
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--primary-font);
+    color: #707070;
+    cursor: pointer;
+}
+
+.headerDate {
+    font-family: var(--primary-font);
+    font-size: 20px;
+    font-weight: 500;
+    color: #707070;
+}
+  
+  
+.dropdown {
+    font-family: var(--primary-font);
+    width: 130px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 10px;
+    background-color: transparent;
+}
+  

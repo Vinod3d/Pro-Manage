@@ -169,8 +169,6 @@ export const checkAuthSession = () => async(dispatch) =>{
             withCredentials: true,
         });
 
-        console.log(response)
-
         dispatch(userSlice.actions.checkSession(response.data))
     } catch (error) {
         dispatch(userSlice.actions.checkSessionFailed(error.response.data.message))
