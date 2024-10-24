@@ -9,9 +9,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearErrors, clearMessage, logout } from '../../store/slices/userSlice';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import LogoutModal from '../../components/LogOutModal/LogoutModal';
 
 const Dashboard = () => {
     const [selectedTab, setSelectedTab] = useState('Board');
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
     const dispatch = useDispatch()
     const {isAuthenticated , error, message} = useSelector((state)=>state.user)
     const navigate = useNavigate()
@@ -76,7 +78,7 @@ const Dashboard = () => {
           ))}
         </nav>
         <div className={styles.logout}>
-          <button className={styles.logoutButton} onClick={handleLogout}>
+          <button className={styles.logoutButton} onClick={() => setIsLogoutModalOpen(true)}>
             <TbLogout className={styles.logoutButtonIcon} />
             Log out
           </button>
@@ -87,6 +89,13 @@ const Dashboard = () => {
       <main className={styles.mainContent}>
         {mainContent()}
       </main>
+
+      {/* modal */}
+      <LogoutModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onLogout={handleLogout}
+      />
     </div>
   )
 }
