@@ -7,7 +7,7 @@ const auth = async (req, res, next) => {
     const token = req.cookies.token; 
 
     if (!token) {
-        return next(CustomErrorHandler.unAuthorized("You Are Not valid user"));
+        return next(CustomErrorHandler.unAuthorized("You Are Not logged in"));
     }
 
     try {
