@@ -42,12 +42,12 @@
     margin-top: 8px;
     background-color: #17A2B8;
     color: white;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, color 0.3s;
     border: none;
   }
   
   .logoutButton:hover {
-    background: #1ccfeb;
+    background-color: #138496;
   }
   
   .cancelButton {
@@ -57,10 +57,12 @@
     color: #CF3636;
     border-radius: 0.375rem;
     background-color: white;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, color 0.3s;
   }
   
   .cancelButton:hover {
-    background-color: #e8edf7;
+    background-color: #CF3636;
+    color: white;
   }
+  
   

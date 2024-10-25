@@ -1,14 +1,25 @@
+/* eslint-disable react/prop-types */
 import { useSelector } from 'react-redux';
 import Styles from './Header.module.css';
 import { useEffect, useState } from 'react';
 import { GoPeople } from "react-icons/go";
+import { RiArrowDropDownLine } from "react-icons/ri";
 import AddPeopleModal from '../AddPeopleModal/AddPeopleModal';
+import { useRef } from 'react';
 
 const Header = ({ selectedOption, handleSelectChange }) => {
   const [formattedDate, setFormattedDate] = useState('');
   const [isPeopleModalOpen, setIsPeopleModalOpen] = useState(false)
   const [email, setEmail] = useState('');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const {user} = useSelector((state)=>state.user)
+  const options = [
+    { value: 'today', label: 'Today' },
+    { value: 'thisWeek', label: 'This Week' },
+    { value: 'thisMonth', label: 'This Month' },
+  ];
+
+  const dropdownRef = useRef(null);
 
 
   useEffect(()=>{
@@ -45,6 +56,33 @@ const Header = ({ selectedOption, handleSelectChange }) => {
     
   }
 
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const handleOptionSelect = (option) => {
+    handleSelectChange(option.value);
+    setDropdownOpen(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownOpen]);
+
   return (
     <>
       <div className={Styles.headerContainer}>
@@ -61,15 +99,24 @@ const Header = ({ selectedOption, handleSelectChange }) => {
 
         </div>
         <div className={Styles.headerMenu}>
-          <select
-            className={Styles.dropdown}
-            onChange={handleSelectChange}
-            value={selectedOption}
-          >
-            <option value="today">Today</option>
-            <option selected value="thisWeek">This Week</option>
-            <option value="thisMonth">This Month</option>
-          </select>
+          <div className={Styles.customDropdown} onClick={toggleDropdown} ref={dropdownRef}>
+            <div className={Styles.dropdownSelected}>
+              {options.find((option) => option.value === selectedOption)?.label || 'Select an option'}<RiArrowDropDownLine className={Styles.selectIcon}/>
+            </div>
+            {dropdownOpen && (
+              <ul className={Styles.dropdownList}>
+                {options.map((option) => (
+                  <li
+                    key={option.value}
+                    className={`${Styles.dropdownItem} ${option.value === selectedOption ? Styles.active : ''}`}
+                    onClick={() => handleOptionSelect(option)}
+                  >
+                    {option.label}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
 
