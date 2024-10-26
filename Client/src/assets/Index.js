@@ -5,6 +5,7 @@ import logo from './logo.png'
 import Board from './Board.png'
 import Analytics from './Analytics.png'
 import settings from './settings.png'
+import collaps from './collaps.png'
 
 export {
     Astronaut,
@@ -13,5 +14,6 @@ export {
     logo,
     Board,
     Analytics,
-    settings
+    settings,
+    collaps
 }

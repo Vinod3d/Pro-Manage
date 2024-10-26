@@ -7,6 +7,39 @@
   font-family: "Open Sans", sans-serif;
 }
 
+
 :root{
   --primary-font: "Poppins", sans-serif;
+  --primary-color: #17A2B8;
+  --danger-color: #CF3636;
+}
+
+::-webkit-scrollbar {
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #d1e5ff;
+  border-radius: 30px;
+}
+::-webkit-scrollbar-thumb {
+  background: #9CB7C5;
+  border-radius: 7px;
+}
+
+.text-red{
+  color: #FF3B3F;
+}
+
+.flex{
+  display: flex;
+  align-items: center;
+}
+.justify-between{
+  justify-content: space-between;
+}
+
+
+input:focus {
+  border-color: #17A2B8;
+  outline: none;
 }
