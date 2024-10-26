@@ -10,113 +10,141 @@ export const register = async (req, res, next) => {
   try {
     const userExists = await User.findOne({ email });
     if (userExists) {
-        return next(CustomErrorHandler.alreadyExist("Email is already registered"));
+      return next(
+        CustomErrorHandler.alreadyExist("Email is already registered")
+      );
     }
     const newUser = new User({ name, email, password });
     await newUser.save();
 
     res.status(201).json({
-        newUser, 
-        message: "User registered successfully" 
+      newUser,
+      message: "User registered successfully",
     });
-  } 
-  
-  catch (error) {
-    
+  } catch (error) {
     if (error.name === "ValidationError") {
-        const errorMessages = Object.values(error.errors).map(err => err.message);
-        return next(CustomErrorHandler.validationError(errorMessages.join(', ')));
+      const errorMessages = Object.values(error.errors).map(
+        (err) => err.message
+      );
+      return next(CustomErrorHandler.validationError(errorMessages.join(", ")));
     }
 
-    next(error)
+    next(error);
   }
 };
 
-
 // LOGIN USER
 
-export const login = async (req, res, next)=>{
-    const { email, password } = req.body;
+export const login = async (req, res, next) => {
+  const { email, password } = req.body;
 
-    if (!email || !password) {
-        return next(CustomErrorHandler.badRequest("Email and password are required."));
+  if (!email || !password) {
+    return next(
+      CustomErrorHandler.badRequest("Email and password are required.")
+    );
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return next(CustomErrorHandler.wrongCredentials("Invalid email"));
+    }
+    const isValidPassword = await user.comparePassword(password);
+    if (!isValidPassword) {
+      return next(CustomErrorHandler.unAuthorized("Invalid password."));
     }
 
-    try {
-        const user = await User.findOne({ email });
-        if (!user) {
-            return next(CustomErrorHandler.wrongCredentials('Invalid email'));
-        }
-        const isValidPassword = await user.comparePassword(password);
-        if (!isValidPassword) {
-            return next(CustomErrorHandler.unAuthorized('Invalid password.'));
-        }
-
-        JwtService(user, "User Logged in Successfully", 200, res);
-    } catch (error) {
-        next(error);
-    }
-}
+    JwtService(user, "User Logged in Successfully", 200, res);
+  } catch (error) {
+    next(error);
+  }
+};
 
 // LOGOUT USER
 
 export const logout = async (req, res, next) => {
-    try {
-        res.clearCookie("token", {
-            httpOnly: true,
-            sameSite: "None",
-            secure: true,
-        });
-    
-        res.status(200).json({
-            success: true,
-            message: "logged out",
-        });
-    } 
-    
-    catch (error) {
-        return next(error);
-    }
-};
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+    });
 
+    res.status(200).json({
+      success: true,
+      message: "logged out",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
 
 // GET ALL USERS
 
-export const getAllUsers = async (req, res, next)=>{
-    try {
-        const users = await User.find().select('-password');
-        if (!users || users.length === 0) {
-            return next(CustomErrorHandler.notFound("No users found"));
-        }
-
-        res.status(200).json({
-            users,
-            message: "Users retrieved successfully",
-        });
-    } 
-    catch (error) {
-        next(error)
+export const getAllUsers = async (req, res, next) => {
+  try {
+    const users = await User.find().select("-password");
+    if (!users || users.length === 0) {
+      return next(CustomErrorHandler.notFound("No users found"));
     }
-}
 
+    res.status(200).json({
+      users,
+      message: "Users retrieved successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 // GET SINGLE USER
 
-export const getUser = async (req, res, next)=>{
-    const { userId } = req.params;
+export const getUser = async (req, res, next) => {
+  const { userId } = req.params;
 
-    try {
-        const user = await User.findById(userId);
+  try {
+    const user = await User.findById(userId);
 
-        if (!user) {
-            return next(CustomErrorHandler.notFound('User not found'));
-        }
-
-        res.status(200).json({
-            success: true,
-            user,
-        });
-    } catch (error) {
-        next(error);
+    if (!user) {
+      return next(CustomErrorHandler.notFound("User not found"));
     }
-}
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ADD MEMBER
+
+export const addMember = async (req, res, next) => {
+  const { _id } = req.user;
+  const { email } = req.body;
+
+  if (!email) {
+    return next(CustomErrorHandler.badRequest("Please enter email"));
+  }
+
+  try {
+    const user = await User.findById(_id);
+
+    if (!user) {
+      return next(CustomErrorHandler.notFound("User not found"));
+    }
+
+    if (!user.addPeople.includes(email)) {
+      user.addPeople.push(email);
+      await user.save();
+      return res
+        .status(200)
+        .json({ message: "New member added", addPeople: user.addPeople });
+    } else {
+      return next(CustomErrorHandler.badRequest("This member Already added"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};

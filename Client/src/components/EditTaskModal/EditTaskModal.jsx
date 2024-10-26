@@ -2,15 +2,16 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { FaPlus } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
-import Styles from './AddTask.module.css';
+import Styles from './EditTask.module.css';
 import { useState } from "react";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-export default function AddTaskModal({isOpen, onClose, }) {
+export default function EditTaskModal({isOpen, onClose, }) {
     if(!isOpen) return null;
   const [title, setTitle] = useState('');
   const [priority, setPriority] = useState('HIGH');
+  const [assignee, setAssignee] = useState('');
   const [checklist, setChecklist] = useState([
     { id: 1, text: 'Done Task', done: true },
     { id: 2, text: 'Task to be done', done: false },
@@ -93,6 +94,19 @@ export default function AddTaskModal({isOpen, onClose, }) {
             </div>
           </div>
 
+          <div className={`${Styles.spacingLarge} ${Styles.assignField}`}>
+            <label htmlFor="assignee">
+              Assign to
+            </label>
+            <input
+              type="text"
+              id="assignee"
+              value={assignee}
+              onChange={(e) => setAssignee(e.target.value)}
+              className={Styles.inputField}
+              placeholder="Add an assignee"
+            />
+          </div>
 
           <div className={`${Styles.spacingLarge} ${Styles.checklistSection}`}>
             <label>

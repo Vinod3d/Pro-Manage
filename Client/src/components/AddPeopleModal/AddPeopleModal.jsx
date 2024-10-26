@@ -5,7 +5,7 @@ const AddPeopleModal = ({email, onChange, onClose, onSubmit, isOpen }) => {
     if (!isOpen) return null
     
   return (
-    <div className={Styles.modal}>
+    <div className={Styles.modal} onClick={onClose}>
       <div className={Styles.modalContent}>
         <h3 className={Styles.modalTitle}>Add people to the board</h3>
         <div className={Styles.modalBody}>
