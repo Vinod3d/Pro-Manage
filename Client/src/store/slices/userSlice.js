@@ -11,6 +11,7 @@ const userSlice = createSlice({
         error: null,
         message:null,
         isAuthenticated: false,
+        lastAddedEmail: null,
     },
 
     reducers : {
@@ -91,6 +92,26 @@ const userSlice = createSlice({
             state.error = action.payload;
         },
 
+        // Add Member
+        addMemberRequest :(state)=>{
+            state.loading = true;
+            state.error = null;
+        },
+
+        addMemberSuccess: (state, action) => {
+            state.loading = false;
+            state.user = action.payload.user;
+            state.message = action.payload.message;
+            state.lastAddedEmail = action.payload.email;
+        },
+
+        addMemberFailed: (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        },
+
+       
+
 
 
         clearErrors: (state) => {
@@ -99,7 +120,10 @@ const userSlice = createSlice({
 
         clearMessage: (state) => {
             state.message = null;
-        }
+        },
+        clearLastAddedEmail: (state) => {
+            state.lastAddedEmail = null;
+        },
     }
 })
 
@@ -175,12 +199,43 @@ export const checkAuthSession = () => async(dispatch) =>{
     }
 }
 
+export const addMember = (email) => async (dispatch) => {
+    dispatch(userSlice.actions.addMemberRequest());
+    try {
+      const response = await axios.patch(
+        `${baseUrl}/api/user/addmember`,
+        { email },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      console.log(response.data)
+  
+      dispatch(userSlice.actions.addMemberSuccess({
+        email: email,
+        user: response.data.user,
+        message : response.data.message
+      }));
+      dispatch(userSlice.actions.clearErrors());
+    } catch (error) {
+      dispatch(userSlice.actions.addMemberFailed(error.response?.data?.message || "Failed to add member"));
+    }
+};
+
 export const clearErrors = () => (dispatch) => {
     dispatch(userSlice.actions.clearErrors());
 };
 
 export const clearMessage = () => (dispatch) => {
     dispatch(userSlice.actions.clearMessage());
+};
+
+export const clearLastAddedEmail = () => (dispatch) => {
+    dispatch(userSlice.actions.clearLastAddedEmail());
 };
 
 

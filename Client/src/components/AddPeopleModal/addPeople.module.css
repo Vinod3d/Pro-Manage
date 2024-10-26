@@ -1,81 +1,96 @@
-
 .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 99;
-  }
-  
-  .modalContent {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    width: 33rem;
-  }
-  
-  .modalTitle {
-    font-size: 20px;
-    font-family: var(--primary-font);
-    font-weight: 600;
-    margin-bottom: 20px;
-  }
-  
-  .modalBody {
-    margin-bottom: 20px;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99;
+}
 
-  .modalBody input{
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #767575;
-    border-radius: 10px;
-    font-size: 16px;
-  }
-  
-  .modalFooter {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .btn {
-    padding: 10px 20px;
-    font-size: 14px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    font-family: var(--primary-font);
-  }
-  
-  .btnPrimary {
-    background: #17A2B8;
-    width: 48%;
-    color: white;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .btnPrimary:hover {
-    background-color: #138496;
-    color: #fff;
-  }
-  
-  .btnSecondary {
-    background-color: #FFFFFF;
-    color: #CF3636;
-    border: 1px solid #CF3636;
-    width: 48%;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .btnSecondary:hover {
-    background-color: #CF3636;
-    color: #FFFFFF;
-  }
-  
+.modalContent {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  width: 33rem;
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-family: var(--primary-font);
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.modalBody {
+  margin-bottom: 20px;
+}
+
+.modalBody input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #767575;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: var(--primary-font);
+}
+
+.btnPrimary {
+  background: #17a2b8;
+  width: 48%;
+  color: white;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.btnPrimary:hover {
+  background-color: #138496;
+  color: #fff;
+}
+
+.btnSecondary {
+  background-color: #ffffff;
+  color: #cf3636;
+  border: 1px solid #cf3636;
+  width: 48%;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.btnSecondary:hover {
+  background-color: #cf3636;
+  color: #ffffff;
+}
+
+.addedSuccess {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.messages{
+  font-size: 20px;
+  font-weight: 600;
+}

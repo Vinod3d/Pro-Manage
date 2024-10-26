@@ -10,7 +10,6 @@ import { useRef } from 'react';
 const Header = ({ selectedOption, handleSelectChange }) => {
   const [formattedDate, setFormattedDate] = useState('');
   const [isPeopleModalOpen, setIsPeopleModalOpen] = useState(false)
-  const [email, setEmail] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const {user} = useSelector((state)=>state.user)
   const options = [
@@ -48,13 +47,6 @@ const Header = ({ selectedOption, handleSelectChange }) => {
     setFormattedDate(formatted);
   }
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handleEmailSubmit = () => {
-    
-  }
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -121,9 +113,6 @@ const Header = ({ selectedOption, handleSelectChange }) => {
       </div>
 
       <AddPeopleModal
-        email={email}
-        onChange={handleEmailChange}
-        onSubmit={handleEmailSubmit}
         onClose={()=>setIsPeopleModalOpen(false)}
         isOpen={isPeopleModalOpen}
       />

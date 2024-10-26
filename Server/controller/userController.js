@@ -140,7 +140,7 @@ export const addMember = async (req, res, next) => {
       await user.save();
       return res
         .status(200)
-        .json({ message: "New member added", addPeople: user.addPeople });
+        .json({ message: "New member added", user });
     } else {
       return next(CustomErrorHandler.badRequest("This member Already added"));
     }
