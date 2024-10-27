@@ -1,5 +1,5 @@
 import express from 'express'
-import { APP_PORT, JWT_KEY, MONGO_URI } from './config/Index.js';
+import { APP_PORT, FRONTEND_URL, JWT_KEY, MONGO_URI  } from './config/Index.js';
 import connectDB from './db/ConnectDB.js';
 import cookieParser from 'cookie-parser';
 import userRoutes from './routes/userRoutes.js'
@@ -9,7 +9,7 @@ import cors from 'cors';
 
 const app = express();
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: FRONTEND_URL,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
 }));
