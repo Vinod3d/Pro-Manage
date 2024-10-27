@@ -1,0 +1,7 @@
+{
+    "rewrites": [
+      { "source": "/api/(.*)", "destination": "https://pro-manage-y1bj.onrender.com/api/$1" },
+      { "source": "/(.*)", "destination": "/" }
+    ]
+  }
+  
