@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { checkAuthSession } from "../store/slices/userSlice";
+// import { checkAuthSession } from "../store/slices/userSlice";
 
 // eslint-disable-next-line react/prop-types
 const PrivateRoute = ({element}) => {
@@ -12,7 +12,7 @@ const PrivateRoute = ({element}) => {
 
 
     useEffect(()=>{
-        dispatch(checkAuthSession())
+        // dispatch(checkAuthSession())
         if(!isAuthenticated){
             navigate('/login')
         }
