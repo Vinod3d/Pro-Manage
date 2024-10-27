@@ -12,7 +12,7 @@ const Settings = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted', { name, email, oldPassword, newPassword });
+    
   };
 
   return (

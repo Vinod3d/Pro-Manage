@@ -148,3 +148,48 @@ export const addMember = async (req, res, next) => {
     next(error);
   }
 };
+
+
+// UPDATE USER
+
+export const updateUser = async (req, res, next) => {
+  const { name, email, oldPassword, newPassword } = req.body;
+  const { _id } = req.user;
+
+  try {
+    const user = await User.findById(_id);
+
+    if (!user) {
+      return next(CustomErrorHandler.notFound("User not found"));
+    }
+
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (email) updateData.email = email;
+
+    if (oldPassword && newPassword) {
+      const isMatch = await user.comparePassword(oldPassword);
+      if (!isMatch) {
+        return next(CustomErrorHandler.unAuthorized("Old password is incorrect"));
+      }
+      updateData.password = newPassword; // Will be hashed by the schema's pre-save hook
+    } else if (oldPassword || newPassword) {
+      return next(
+        CustomErrorHandler.badRequest("Both old and new passwords are required to change the password.")
+      );
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(_id, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+      user: updatedUser
+    });
+  } catch (error) {
+    next(error);
+  }
+};
