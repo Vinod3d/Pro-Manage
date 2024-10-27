@@ -1,19 +1,63 @@
-import { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from 'react';
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import styles from './Settings.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearErrors, clearMessage, logout, updateUser } from '../../store/slices/userSlice';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const Settings = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const dispatch = useDispatch();
+  const {loading, message, error } = useSelector((state) => state.user);
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
+    if (email && !email.includes('@')) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+
+    const userData = {
+      name,
+      email,
+      oldPassword,
+      newPassword,
+    };
+
+    dispatch(updateUser(userData));
   };
+
+  useEffect(()=>{
+    if (message) {
+      toast.success(message);
+      dispatch(clearMessage());
+
+      if (email || newPassword) {
+        dispatch(logout());
+        navigate('/login');
+      }
+
+      setName('');
+      setEmail('');
+      setOldPassword('');
+      setNewPassword('');
+    }
+
+    if (error) {
+      toast.error(error);
+      dispatch(clearErrors());
+    }
+  },[error, message, dispatch])
 
   return (
     <div className={styles.container}>
@@ -78,7 +122,7 @@ const Settings = () => {
             type="submit"
             className={styles.submitButton}
           >
-            Update
+            {loading ? 'Updating...' : 'Update'}
           </button>
         </form>
       </div>

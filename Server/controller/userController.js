@@ -163,31 +163,28 @@ export const updateUser = async (req, res, next) => {
       return next(CustomErrorHandler.notFound("User not found"));
     }
 
-    const updateData = {};
-    if (name) updateData.name = name;
-    if (email) updateData.email = email;
+    if (name) user.name = name;
+    if (email) user.email = email;
 
     if (oldPassword && newPassword) {
       const isMatch = await user.comparePassword(oldPassword);
       if (!isMatch) {
         return next(CustomErrorHandler.unAuthorized("Old password is incorrect"));
       }
-      updateData.password = newPassword; // Will be hashed by the schema's pre-save hook
+
+      user.password = newPassword; // Will be hashed by the schema's pre-save hook
     } else if (oldPassword || newPassword) {
       return next(
         CustomErrorHandler.badRequest("Both old and new passwords are required to change the password.")
       );
     }
 
-    const updatedUser = await User.findByIdAndUpdate(_id, updateData, {
-      new: true,
-      runValidators: true,
-    });
+    await user.save();
 
     res.status(200).json({
       success: true,
       message: "User updated successfully",
-      user: updatedUser
+      user
     });
   } catch (error) {
     next(error);

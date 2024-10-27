@@ -110,6 +110,27 @@ const userSlice = createSlice({
             state.error = action.payload;
         },
 
+        // Update User
+        updateUserRequest: (state) => {
+            state.loading = true;
+            state.error = null;
+            state.message = null;
+        },
+
+        updateUserSuccess: (state, action) => {
+            state.loading = false;
+            state.user = action.payload.user;
+            state.message = action.payload.message;
+            state.error = null;
+        },
+
+        updateUserFailed: (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+            state.message = null;
+        },
+      
+
        
 
 
@@ -225,6 +246,30 @@ export const addMember = (email) => async (dispatch) => {
       dispatch(userSlice.actions.addMemberFailed(error.response?.data?.message || "Failed to add member"));
     }
 };
+
+
+export const updateUser = (userData) => async (dispatch) => {
+    dispatch(userSlice.actions.updateUserRequest());
+    try {
+      const response = await axios.patch(
+        `${baseUrl}/api/user/update`,
+        userData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+  
+      dispatch(userSlice.actions.updateUserSuccess(response.data));
+      dispatch(userSlice.actions.clearErrors());
+    } catch (error) {
+      dispatch(userSlice.actions.updateUserFailed(error.response?.data.message || "Update failed"));
+    }
+};
+
+
 
 export const clearErrors = () => (dispatch) => {
     dispatch(userSlice.actions.clearErrors());
