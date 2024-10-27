@@ -13,7 +13,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<PrivateRoute element={<Dashboard/>}/>}/>
+        <Route path='/dashboard' element={<PrivateRoute element={<Dashboard/>}/>}/>
+        <Route path='/' element={<Login/>}/>
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
         <Route path='*' element={<NotFound/>}/>

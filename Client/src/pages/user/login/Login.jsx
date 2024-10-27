@@ -52,11 +52,11 @@ const Login = () => {
         if(message){
             toast.success(message)
             dispatch(clearMessage());
-            navigate('/')
+            // navigate('/')
         }
 
         if(isAuthenticated){
-            navigate('/')
+            navigate('/dashboard')
         }
         
         if(error){
