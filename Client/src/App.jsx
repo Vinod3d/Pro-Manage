@@ -1,6 +1,6 @@
 import {BrowserRouter, Routes, Route } from 'react-router-dom'
-import Login from './pages/user/login/Login'
-import Register from './pages/user/register/register'
+import Login from './pages/user/login/Login.jsx'
+import Register from './pages/user/register/Register.jsx'
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NotFound from './pages/not_found/NotFound';
