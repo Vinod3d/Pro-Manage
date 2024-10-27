@@ -96,7 +96,7 @@ export default function AddTaskModal({isOpen, onClose, }) {
 
           <div className={`${Styles.spacingLarge} ${Styles.checklistSection}`}>
             <label>
-              Checklist ({checklist.filter(item => item.done).length}/{checklist.length}) *
+              Checklist ({checklist.filter(item => item.done).length}/{checklist.length}) <span className="text-red">*</span>
             </label>
             <ul className={Styles.checklistContainer}>
               {checklist.map((item) => (

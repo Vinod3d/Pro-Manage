@@ -78,7 +78,7 @@ const Header = ({ selectedOption, handleSelectChange }) => {
   return (
     <>
       <div className={Styles.headerContainer}>
-        <div className={Styles.headerTitle}>Welcome! {user.name}</div>
+        <div className={Styles.headerTitle}>Welcome! {user.user.name}</div>
         <div className={Styles.headerDate}>{formattedDate}</div>
       </div>
       <div className={Styles.headerContainer}>
