@@ -34,15 +34,46 @@ export const createTask = async(req, res, next)=>{
 export const getTaskByCreatorId = async (req, res, next) =>{
     try {
         const creatorId = req.user._id;
-        const tasks = await Task.find({ creator: creatorId });
+        const filter = req.query.filter;
+        const userEmail = req.user.email;
 
-        if (!tasks.length) {
-            return next(CustomErrorHandler.notFound("No tasks found for this user."));
+
+        const now = new Date();
+        let startDate = new Date(0);
+        let endDate = now;
+
+        if(filter === 'today'){
+            startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        } 
+
+        else if (filter === 'thisWeek') {
+            const firstDayOfWeek = new Date(now);
+            firstDayOfWeek.setDate(now.getDate() - now.getDay() + 1); // Set to Monday
+            startDate = firstDayOfWeek;
         }
+
+        else if (filter === 'thisMonth') {
+            startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        }
+
+        const userTasks = await Task.find({
+            creator: creatorId,
+            createdAt: { $gte: startDate, $lt: endDate }
+        });
+
+        const emailTasks = await Task.find({
+            assignedTo: userEmail,
+            createdAt: { $gte: startDate, $lt: endDate }
+        });
+        const uniqueTasks = new Set([...userTasks, ...emailTasks].map(task => task._id.toString()));
+        const combinedTasks = await Task.find({
+            _id: { $in: Array.from(uniqueTasks) }
+        });
 
         res.status(200).json({
             message: 'Tasks retrieved successfully',
-            tasks
+            tasks: combinedTasks
+            
         });
     } catch (error) {
         next(error)
@@ -104,40 +135,32 @@ export const deleteTask = async (req, res, next) => {
 export const analyticsdata = async (req, res) => {
     try {
         const userId = req.user._id;
-        const userEmail = req.headers.email; 
-        console.log(userEmail)
-
-
-
-        console.log('User ID received in backend:', userId);
-        console.log('Email received:', userEmail);
-
-        // Aggregate tasks
-        const analytics = await UserTask.aggregate([
+        const userEmail = req.user.email;
+        
+        const analytics = await Task.aggregate([
             {
                 $match: {
                     $or: [
-                        { userId: userId },
-                        { assignto: userEmail }
+                        { creator: userId },
+                        { assignedTo: userEmail }
                     ]
                 }
             },
             {
                 $group: {
-                    _id: null, // Grouping all documents together
-                    backlog: { $sum: { $cond: [{ $eq: ['$status', 'backlog'] }, 1, 0] } },
-                    todo: { $sum: { $cond: [{ $eq: ['$status', 'todo'] }, 1, 0] } },
-                    inProgress: { $sum: { $cond: [{ $eq: ['$status', 'inProgress'] }, 1, 0] } },
-                    done: { $sum: { $cond: [{ $eq: ['$status', 'done'] }, 1, 0] } },
-                    lowPriority: { $sum: { $cond: [{ $eq: ['$selectpriority', 'LOW PRIORITY'] }, 1, 0] } },
-                    moderatePriority: { $sum: { $cond: [{ $eq: ['$selectpriority', 'MODERATE PRIORITY'] }, 1, 0] } },
-                    highPriority: { $sum: { $cond: [{ $eq: ['$selectpriority', 'HIGH PRIORITY'] }, 1, 0] } },
-                    dueDateTasks: { $sum: { $cond: [{ $ne: ['$duedate', null] }, 1, 0] } }
+                    _id: null,
+                    backlog: { $sum: { $cond: [{ $eq: ['$taskStatus', 'BACKLOG'] }, 1, 0] } },
+                    todo: { $sum: { $cond: [{ $eq: ['$taskStatus', 'TO_DO'] }, 1, 0] } },
+                    inProgress: { $sum: { $cond: [{ $eq: ['$taskStatus', 'IN_PROGRESS'] }, 1, 0] } },
+                    done: { $sum: { $cond: [{ $eq: ['$taskStatus', 'COMPLETED'] }, 1, 0] } },
+                    lowPriority: { $sum: { $cond: [{ $eq: ['$priorityLevel', 'LOW'] }, 1, 0] } },
+                    moderatePriority: { $sum: { $cond: [{ $eq: ['$priorityLevel', 'MEDIUM'] }, 1, 0] } },
+                    highPriority: { $sum: { $cond: [{ $eq: ['$priorityLevel', 'HIGH'] }, 1, 0] } },
+                    dueDateTasks: { $sum: { $cond: [{ $ne: ['$dueDate', null] }, 1, 0] } }
                 }
             }
         ]);
 
-        // If no analytics found, return zero counts
         const finalAnalytics = analytics.length > 0 ? analytics[0] : {
             backlog: 0,
             todo: 0,
@@ -155,3 +178,4 @@ export const analyticsdata = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
