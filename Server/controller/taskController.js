@@ -80,25 +80,47 @@ export const getTaskByCreatorId = async (req, res, next) =>{
     }
 }
 
+export const getTaskById = async (req, res) => {
+    try {
+        const { Id } = req.params;
+        const task = await Task.findById(Id);
+
+        if (!task) {
+            return next(CustomErrorHandler.notFound('Task not found'))
+        }
+
+        res.status(200).json(task);
+    } catch (error) {
+        next(error)
+    }
+};
+
+
 
 export const updateTask = async (req, res, next) => {
     const { taskId } = req.params;
     const { taskTitle, priorityLevel, assignedTo, checklistItems, dueDate, taskStatus } = req.body;
 
+    const updateFields = {};
+
+    if (taskTitle) updateFields.taskTitle = taskTitle;
+    if (priorityLevel) updateFields.priorityLevel = priorityLevel;
+    if (taskStatus) updateFields.taskStatus = taskStatus;
+
+    updateFields.assignedTo = assignedTo !== undefined ? assignedTo : null;
+    updateFields.dueDate = dueDate ? new Date(dueDate) : null;
+
+    if (checklistItems) {
+        updateFields.checklistItems = checklistItems.map(item => ({
+            text: item.text,
+            isCompleted: item.isCompleted || false
+        }));
+    }
+
     try {
         const updatedTask = await Task.findByIdAndUpdate(
             taskId,
-            {
-                taskTitle,
-                priorityLevel,
-                assignedTo: assignedTo || null,
-                checklistItems: checklistItems ? checklistItems.map(item => ({
-                    text: item.text,
-                    isCompleted: item.isCompleted || false
-                })) : undefined,
-                dueDate: dueDate ? new Date(dueDate) : null,
-                taskStatus
-            },
+            updateFields,
             { new: true, runValidators: true }
         );
 
@@ -117,10 +139,10 @@ export const updateTask = async (req, res, next) => {
 
 
 export const deleteTask = async (req, res, next) => {
-    const { id } = req.params;
+    const { Id } = req.params;
 
     try {
-        const task = await Task.findByIdAndDelete(id);
+        const task = await Task.findByIdAndDelete(Id);
 
         if (!task) {
             return next(CustomErrorHandler.notFound('Task not found.'));
@@ -174,8 +196,7 @@ export const analyticsdata = async (req, res) => {
 
         res.json(finalAnalytics);
     } catch (error) {
-        console.error('Error retrieving tasks:', error);
-        res.status(500).json({ message: 'Server error' });
+       next(error)
     }
 };
 
