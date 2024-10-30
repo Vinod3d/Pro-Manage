@@ -1,0 +1,207 @@
+.card {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    width: 100%;
+    font-family: Arial, sans-serif;
+    margin-bottom: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.priorityIndicator {
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+}
+
+.priorityText {
+    font-size: 12px;
+    color: #888;
+    margin-left: 8px;
+}
+
+.menuButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #000;
+}
+
+.menu {
+    position: absolute;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1000; 
+    width: 150px;
+    top: 40px;
+    right: 18px;
+    overflow: hidden;
+}
+
+.menu button {
+    display: block; /* Stack buttons */
+    padding: 8px 17px; /* Button padding */
+    width: 100%; /* Full width */
+    border: none; /* Remove border */
+    background: none; /* No background */
+    text-align: left;
+    font-size: 14px;
+}
+
+.menu button:hover {
+    background: #f0f0f0; /* Change background on hover */
+}
+
+.title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 8px 0;
+    color: #333;
+}
+
+.checklistSummary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.expandButton {
+    background: #EEECEC;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    color: #888;
+}
+
+.expandButton:hover{
+    background-color: #D1D1D1;
+}
+
+.expandIcon {
+    display: inline-block;
+    margin-top: 4px;
+    transition: transform 0.3s ease;
+}
+
+
+
+.rotated {
+    transform: rotate(180deg);
+    margin-top: -4px;
+}
+
+.checklistContainer {
+    margin-top: 8px;
+    overflow: hidden;
+    height: 0;
+    transition: height 0.3s ease;
+}
+
+.checklistItem {
+    display: flex;
+    align-items: start;
+    border: 1px solid #d1d5db;
+    padding: 10px 12px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+
+.checklistCheckbox {
+    margin-top: 3px;
+    min-width: 1.1rem;
+    min-height: 1.1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    appearance: none;
+    background-color: white;
+    border: 2px solid #9CB7C5;
+    position: relative;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.checklistCheckbox:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.checklistCheckbox:checked::before {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 4px;
+    width: 0.25rem;
+    height: 0.5rem;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+
+.checklistText {
+    margin-left: 8px;
+    
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+    font-weight: 600;
+}
+
+.dueDate {
+    font-size: 12px;
+    color: #888;
+    background-color: #f0f0f0;
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+
+.statusButtons {
+    display: flex;
+    gap: 4px;
+}
+
+.statusButton {
+    font-size: 10px;
+    color: #666;
+    background-color: #EEECEC;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.statusButton:hover{
+    background-color: #D1D1D1;
+}
+
+.activeStatus {
+    background-color: #333;
+    color: #fff;
+}
+
+
+
+

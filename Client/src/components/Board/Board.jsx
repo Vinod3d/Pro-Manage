@@ -1,18 +1,26 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from '../Header/Header';
 import TaskBoards from '../TaskBoards/TaskBoards';
 import Styles from './Board.module.css'
+import { useDispatch, useSelector } from 'react-redux';
+import { clearErrors, getTask } from '../../store/slices/taskSlice';
+import { toast } from 'react-toastify';
 
 const Board = () => {
   const [selectedOption, setSelectedOption] = useState('thisWeek');
-  const [tasks, setTasks] = useState({
-    backlog: [],
-    todo: [],
-    inprogress: [],
-    done: []
-  });
+  const dispatch = useDispatch();
+  const {tasks, error} = useSelector((state)=>state.task);
+  
+  useEffect(()=>{
+    dispatch(clearErrors())
+    if(error){
+      toast.error(error)
+    }
 
-  const handleSelectChange = (option) => {
+    dispatch(getTask(selectedOption));
+  },[dispatch, selectedOption, error])
+
+  const handleSelectDate = (option) => {
     setSelectedOption(option);
   }
   return (
@@ -20,9 +28,9 @@ const Board = () => {
       <div className={Styles.mainContent}>
         <Header
           selectedOption={selectedOption}
-          handleSelectChange={handleSelectChange}
+          handleSelectDate={handleSelectDate}
         />
-        <TaskBoards tasks={tasks}/>
+        <TaskBoards tasks={tasks?.tasks}/>
       </div>
     </>
   );

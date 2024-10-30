@@ -50,8 +50,8 @@ const userTaskSchema = new mongoose.Schema({
     },
     taskStatus: {
         type: String,
-        enum: ['BACKLOG', 'TO_DO', 'IN_PROGRESS', 'COMPLETED'],
-        default: 'TO_DO',
+        enum: ['BACKLOG', 'TODO', 'PROGRESS', 'DONE'],
+        default: 'TODO',
     },
     shareableLink: {
         type: String,

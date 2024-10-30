@@ -7,7 +7,7 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import AddPeopleModal from '../AddPeopleModal/AddPeopleModal';
 import { useRef } from 'react';
 
-const Header = ({ selectedOption, handleSelectChange }) => {
+const Header = ({ selectedOption, handleSelectDate }) => {
   const [formattedDate, setFormattedDate] = useState('');
   const [isPeopleModalOpen, setIsPeopleModalOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -53,7 +53,7 @@ const Header = ({ selectedOption, handleSelectChange }) => {
   };
 
   const handleOptionSelect = (option) => {
-    handleSelectChange(option.value);
+    handleSelectDate(option.value);
     setDropdownOpen(false);
   };
 
@@ -78,7 +78,7 @@ const Header = ({ selectedOption, handleSelectChange }) => {
   return (
     <>
       <div className={Styles.headerContainer}>
-        <div className={Styles.headerTitle}>Welcome! {user.user.name}</div>
+        <div className={Styles.headerTitle}>Welcome! {user?.name}</div>
         <div className={Styles.headerDate}>{formattedDate}</div>
       </div>
       <div className={Styles.headerContainer}>

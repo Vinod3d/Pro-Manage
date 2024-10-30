@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import TaskColumn from './TaskColumn.jsx';
 import StylesTaskBoard from './TaskBoard.module.css';
 import { useState } from 'react';
@@ -5,19 +6,6 @@ import AddTaskModal from '../AddTaskModal/AddTaskModal.jsx';
 
 const TaskBoard = ({ tasks }) => {
     const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
-    const [collapsed, setCollapsed] = useState({
-        backlog: false,
-        todo: false,
-        inprogress: false,
-        done: false,
-    });
-
-    const toggleCollapse = (column) => {
-        setCollapsed((prev) => ({
-            ...prev,
-            [column]: !prev[column],
-        }));
-    };
 
     const handleAddTaskOpen = () => {
         setIsAddTaskModalOpen(true);
@@ -25,32 +13,31 @@ const TaskBoard = ({ tasks }) => {
     const handleAddTaskClose = () => {
         setIsAddTaskModalOpen(false);
     };
+
+    const tasksByStatus = {
+        backlog: tasks?.filter((task) => task.taskStatus === 'BACKLOG'),
+        todo: tasks?.filter((task) => task.taskStatus === 'TODO'),
+        inprogress: tasks?.filter((task) => task.taskStatus === 'PROGRESS'),
+        done: tasks?.filter((task) => task.taskStatus === 'DONE'),
+    };
     return (
         <div className={StylesTaskBoard.board}>
                 <TaskColumn
                     title="Backlog"
-                    tasks={tasks.backlog}
-                    collapsed={collapsed.backlog}
-                    onToggle={() => toggleCollapse('backlog')}
+                    tasks={tasksByStatus.backlog}
                 />
                 <TaskColumn
                     title="To Do"
-                    tasks={tasks.todo}
-                    collapsed={collapsed.todo}
-                    onToggle={() => toggleCollapse('todo')}
+                    tasks={tasksByStatus.todo}
                     onAddTask={handleAddTaskOpen}
                 />
                 <TaskColumn
                     title="In Progress"
-                    tasks={tasks.inprogress}
-                    collapsed={collapsed.inprogress}
-                    onToggle={() => toggleCollapse('inprogress')}
+                    tasks={tasksByStatus.inprogress}
                 />
                 <TaskColumn
                     title="Done"
-                    tasks={tasks.done}
-                    collapsed={collapsed.done}
-                    onToggle={() => toggleCollapse('done')}
+                    tasks={tasksByStatus.done}
                 />
 
                 {/* <AddTaskModal   /> */}
