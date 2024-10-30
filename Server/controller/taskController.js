@@ -48,7 +48,7 @@ export const getTaskByCreatorId = async (req, res, next) =>{
 
         else if (filter === 'thisWeek') {
             const firstDayOfWeek = new Date(now);
-            firstDayOfWeek.setDate(now.getDate() - now.getDay() + 1); // Set to Monday
+            firstDayOfWeek.setDate(now.getDate() - (now.getDay() + 1));
             startDate = firstDayOfWeek;
         }
 
