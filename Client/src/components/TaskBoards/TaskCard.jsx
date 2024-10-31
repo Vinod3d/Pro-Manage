@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { MdExpandMore, MdMoreHoriz } from "react-icons/md";
 import StylesTaskCard from './TaskCard.module.css';
 
-const TaskCard = ({ task, onStatusChange, onEdit, onDelete, onShare, isCollapsed, setCollapsedAll }) => {
+const TaskCard = ({ task, onStatusChange, onEdit, onDelete, onShare, isCollapsed, setCollapsedAll, }) => {
     const { taskTitle, priorityLevel, dueDate, checklistItems, taskStatus } = task;
     const [isExpanded, setIsExpanded] = useState(isCollapsed);
     const [checklistHeight, setChecklistHeight] = useState(0);
@@ -88,7 +88,17 @@ const TaskCard = ({ task, onStatusChange, onEdit, onDelete, onShare, isCollapsed
     };
 
 
-    const handleChecklistChange = ()=>{
+    const handleEdit = ()=>{
+        onEdit()
+        setIsMenuOpen(false)
+    }
+
+    const handleDelete = () =>{
+        onDelete()
+        setIsMenuOpen(false)
+    }
+
+    const handleChecklistChange = () =>{
 
     }
 
@@ -101,7 +111,6 @@ const TaskCard = ({ task, onStatusChange, onEdit, onDelete, onShare, isCollapsed
 
     return (
         <div className={StylesTaskCard.card}>
-            {/* Priority and Menu */}
             <div className={StylesTaskCard.header}>
                 <div className="flex">
                     <span className={`${StylesTaskCard.priorityIndicator}`} style={{backgroundColor:getPriorityColor(priorityLevel)}}/>
@@ -114,27 +123,24 @@ const TaskCard = ({ task, onStatusChange, onEdit, onDelete, onShare, isCollapsed
                 </button>
                 {isMenuOpen && (
                     <div className={StylesTaskCard.menu} ref={menuRef}>
-                        <button onClick={onEdit}>Edit</button>
+                        <button onClick={handleEdit}>Edit</button>
                         <button onClick={onShare}>Share</button>
-                        <button onClick={onDelete} style={{color:'#ff2121'}}>Delete</button>
+                        <button onClick={handleDelete} style={{color:'#ff2121'}}>Delete</button>
                     </div>
                 )}
             </div>
 
-            {/* Task Title */}
             <h4 className={StylesTaskCard.title}>{taskTitle}</h4>
 
-            {/* Checklist Summary */}
             <div className={StylesTaskCard.checklistSummary}>
                 Checklist ({checklistItems?.filter(item => item.isCompleted).length}/{checklistItems?.length || 0})
                 <button className={StylesTaskCard.expandButton} onClick={() => setIsExpanded(!isExpanded)}>
                     <span className={`${StylesTaskCard.expandIcon} ${isExpanded ? StylesTaskCard.rotated : ''}`}>
                         <MdExpandMore />
                     </span>
-                </button>
+                </button> 
             </div>
 
-            {/* Expandable Checklist (if expanded) */}
             
                 <ul 
                     ref={checklistRef} 
@@ -156,8 +162,6 @@ const TaskCard = ({ task, onStatusChange, onEdit, onDelete, onShare, isCollapsed
                     ))}
                 </ul>
            
-
-            {/* Due Date and Status Buttons */}
             <div className={StylesTaskCard.footer}>
                 <span 
                     className={StylesTaskCard.dueDate} 

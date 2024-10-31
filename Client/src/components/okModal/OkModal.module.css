@@ -9,12 +9,45 @@
     z-index: 50;
   }
   
+  @keyframes scaleIn {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes scaleOut {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+  
   .modalContainer {
     background-color: white;
     border-radius: 0.5rem;
     padding: 1.5rem;
     width: 23rem;
+    transform: scale(0);
+    animation: scaleIn 0.6s ease forwards;
+    opacity: 0;
   }
+
+  .modalOpen {
+    animation: scaleIn 0.3s forwards;
+}
+
+.modalClose {
+    animation: scaleOut 0.3s forwards;
+}
   
   .modalTitle {
     font-size: 1rem;

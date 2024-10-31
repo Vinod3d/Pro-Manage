@@ -2,13 +2,13 @@
 import { useState } from 'react';
 import { Analytics, Board, logo, settings } from '../../assets/Index';
 import { TbLogout } from "react-icons/tb";
-import LogoutModal from '../../components/LogOutModal/LogoutModal';
 import styles from './Sidebar.module.css';
 import { useDispatch } from 'react-redux';
 import { logout, } from '../../store/slices/userSlice';
+import OkModal from '../../components/okModal/okModal';
 
 const Sidebar = ({ selectedTab, onSelectTab }) => {
-    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+    const [isOkModalOpen, setIsOkModalOpen] = useState(false);
     const dispatch = useDispatch();
     const handleLogout = () => {
         dispatch(logout());
@@ -37,18 +37,19 @@ const Sidebar = ({ selectedTab, onSelectTab }) => {
                 ))}
             </nav>
             <div className={styles.logout}>
-                <button className={styles.logoutButton} onClick={() => setIsLogoutModalOpen(true)}>
+                <button className={styles.logoutButton} onClick={() => setIsOkModalOpen(true)}>
                     <TbLogout className={styles.logoutButtonIcon} />
                     Log out
                 </button>
             </div>
 
             {/* Logout Modal */}
-            <LogoutModal
-                isOpen={isLogoutModalOpen}
-                onClose={() => setIsLogoutModalOpen(false)}
-                onLogout={handleLogout}
-            />
+            <OkModal
+                isOpen={isOkModalOpen}
+                onClose={() => setIsOkModalOpen(false)}
+                onOk={handleLogout}
+                titleText={'Are you sure you want to Logout?'}
+                btnText={' Yes, Logout'}            />
         </aside>
     );
 };
