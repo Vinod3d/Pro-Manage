@@ -12,6 +12,7 @@ const Header = ({ selectedOption, handleSelectDate }) => {
   const [isPeopleModalOpen, setIsPeopleModalOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const {user} = useSelector((state)=>state.user)
+
   const options = [
     { value: 'today', label: 'Today' },
     { value: 'thisWeek', label: 'This Week' },
@@ -78,7 +79,7 @@ const Header = ({ selectedOption, handleSelectDate }) => {
   return (
     <>
       <div className={Styles.headerContainer}>
-        <div className={Styles.headerTitle}>Welcome! {user?.name}</div>
+        <div className={Styles.headerTitle}>Welcome! {user?.name || user?.user?.name}</div>
         <div className={Styles.headerDate}>{formattedDate}</div>
       </div>
       <div className={Styles.headerContainer}>

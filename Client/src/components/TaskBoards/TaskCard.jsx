@@ -2,15 +2,39 @@
 import { useEffect, useRef, useState } from 'react';
 import { MdExpandMore, MdMoreHoriz } from "react-icons/md";
 import StylesTaskCard from './TaskCard.module.css';
+import { useDispatch, } from 'react-redux';
+import {updateTask } from '../../store/slices/taskSlice';
 
-const TaskCard = ({ task, onStatusChange, onEdit, onDelete, onShare, isCollapsed, setCollapsedAll, }) => {
+const TaskCard = ({ task, onEdit, onDelete, onShare, isCollapsed, setCollapsedAll }) => {
     const { taskTitle, priorityLevel, dueDate, checklistItems, taskStatus } = task;
     const [isExpanded, setIsExpanded] = useState(isCollapsed);
     const [checklistHeight, setChecklistHeight] = useState(0);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [showTooltip, setShowTooltip] = useState(false);
+    const [localChecklistItems, setLocalChecklistItems] = useState(checklistItems);
     const checklistRef = useRef(null);
     const menuRef = useRef(null);
+    const titleRef = useRef(null);
+    const dispatch = useDispatch()
 
+
+    const maxTitleLength = 29;
+
+    useEffect(() => {
+        setLocalChecklistItems(checklistItems);
+    }, [checklistItems]);
+
+    // tooltip
+    const handleMouseEnter = () => {
+        if (taskTitle.length > maxTitleLength) {
+            setShowTooltip(true);
+        }
+    };
+
+    const handleMouseLeave = () => setShowTooltip(false);
+
+
+    // toggle menu
     const toggleMenu = (event) => {
         event.stopPropagation();
         
@@ -27,14 +51,13 @@ const TaskCard = ({ task, onStatusChange, onEdit, onDelete, onShare, isCollapsed
                 setIsMenuOpen(false);
             }
         };
-
         document.addEventListener("click", handleClickOutside);
-
         return () => {
             document.removeEventListener("click", handleClickOutside);
         };
     }, []);
 
+    // collapse all opened checklist
     useEffect(() => {
         if (isCollapsed) {
             setIsExpanded(false);
@@ -42,6 +65,13 @@ const TaskCard = ({ task, onStatusChange, onEdit, onDelete, onShare, isCollapsed
         }
     }, [isCollapsed, setCollapsedAll]);
 
+    useEffect(() => {
+        if (checklistRef.current) {
+            setChecklistHeight(checklistRef.current.scrollHeight);
+        }
+    }, [isExpanded, checklistItems]);
+
+    // getPriorityColor
     const getPriorityColor = (priorityLevel) => {
         switch (priorityLevel) {
             case 'HIGH': return '#FF2473';
@@ -51,8 +81,7 @@ const TaskCard = ({ task, onStatusChange, onEdit, onDelete, onShare, isCollapsed
         }
     };
 
-
-    
+    // get Formated Date
     function getFormattedDate(date) {
         const day = date.getDate();
         const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(date);
@@ -72,6 +101,7 @@ const TaskCard = ({ task, onStatusChange, onEdit, onDelete, onShare, isCollapsed
         return ` ${month} ${dayWithSuffix}`;
     }
 
+    // get dueDate color
     const getDueDateStyles = (date, status) => {
         const current = new Date();
         const taskDueDate = new Date(date);
@@ -98,16 +128,21 @@ const TaskCard = ({ task, onStatusChange, onEdit, onDelete, onShare, isCollapsed
         setIsMenuOpen(false)
     }
 
-    const handleChecklistChange = () =>{
+    const handleChecklistChange = (itemId) => {
+        const updatedChecklist = localChecklistItems.map((item) => ({
+            ...item,
+            isCompleted: item._id === itemId ? !item.isCompleted : item.isCompleted
+        }));
+    
+        setLocalChecklistItems(updatedChecklist);
+        dispatch(updateTask(task._id, { checklistItems: updatedChecklist }));
+    };
 
+    const handleStatusChange = (status) =>{
+        dispatch(updateTask(task._id, { taskStatus: status }))
     }
-
-    useEffect(() => {
-        if (checklistRef.current) {
-            setChecklistHeight(checklistRef.current.scrollHeight);
-        }
-    }, [isExpanded, checklistItems]);
-
+    
+    
 
     return (
         <div className={StylesTaskCard.card}>
@@ -130,10 +165,22 @@ const TaskCard = ({ task, onStatusChange, onEdit, onDelete, onShare, isCollapsed
                 )}
             </div>
 
-            <h4 className={StylesTaskCard.title}>{taskTitle}</h4>
+            <h4 
+                ref={titleRef} 
+                className={StylesTaskCard.title} 
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+            >
+                {taskTitle}
+            </h4>
+            {showTooltip  &&  (
+                <div className={StylesTaskCard.tooltip}>
+                    {taskTitle}
+                </div>
+            )}
 
             <div className={StylesTaskCard.checklistSummary}>
-                Checklist ({checklistItems?.filter(item => item.isCompleted).length}/{checklistItems?.length || 0})
+                Checklist ({localChecklistItems?.filter(item => item.isCompleted).length}/{localChecklistItems?.length || 0})
                 <button className={StylesTaskCard.expandButton} onClick={() => setIsExpanded(!isExpanded)}>
                     <span className={`${StylesTaskCard.expandIcon} ${isExpanded ? StylesTaskCard.rotated : ''}`}>
                         <MdExpandMore />
@@ -149,12 +196,12 @@ const TaskCard = ({ task, onStatusChange, onEdit, onDelete, onShare, isCollapsed
                         height: isExpanded ? `${checklistHeight}px` : '0px',
                     }}
                 >
-                    {checklistItems.map((item) => (
+                    {localChecklistItems.map((item) => (
                         <li key={item._id} className={StylesTaskCard.checklistItem}>
                             <input
                                 type="checkbox"
                                 checked={item.isCompleted}
-                                onChange={() => handleChecklistChange(item.id)}
+                                onChange={() => handleChecklistChange(item._id)}
                                 className={StylesTaskCard.checklistCheckbox}
                             />
                             <span className={StylesTaskCard.checklistText}>{item.text}</span>
@@ -171,7 +218,7 @@ const TaskCard = ({ task, onStatusChange, onEdit, onDelete, onShare, isCollapsed
                     {['BACKLOG', 'TODO', 'PROGRESS', 'DONE'].filter((status) => status !== taskStatus).map((status)=>(
                         <button
                             key={status}
-                            onClick={() => onStatusChange(status)}
+                            onClick={() => handleStatusChange(status)}
                             className={`${StylesTaskCard.statusButton}`}
                         >
                             {status}

@@ -3,26 +3,30 @@ import Header from '../Header/Header';
 import TaskBoards from '../TaskBoards/TaskBoards';
 import Styles from './Board.module.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { clearErrors, getTask } from '../../store/slices/taskSlice';
-import { toast } from 'react-toastify';
+import { clearErrors, clearMessage, getTask, updateTask } from '../../store/slices/taskSlice';
 
 const Board = () => {
   const [selectedOption, setSelectedOption] = useState('thisWeek');
   const dispatch = useDispatch();
-  const {tasks, error} = useSelector((state)=>state.task);
-  
+  const {tasks, error, message} = useSelector((state)=>state.task);
+  console.log(tasks)
+
   useEffect(()=>{
-    dispatch(clearErrors())
+    if(message){
+      clearMessage()
+    }
     if(error){
-      toast.error(error)
+      clearErrors()
     }
 
     dispatch(getTask(selectedOption));
-  },[dispatch, selectedOption, error])
+  },[dispatch, error, message, selectedOption])
 
   const handleSelectDate = (option) => {
     setSelectedOption(option);
   }
+
+
   return (
     <>
       <div className={Styles.mainContent}>
@@ -30,7 +34,9 @@ const Board = () => {
           selectedOption={selectedOption}
           handleSelectDate={handleSelectDate}
         />
-        <TaskBoards tasks={tasks?.tasks}/>
+        <TaskBoards 
+          tasks={tasks?.tasks}
+        />
       </div>
     </>
   );

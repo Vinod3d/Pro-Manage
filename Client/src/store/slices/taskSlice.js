@@ -21,10 +21,11 @@ const taskSlice = createSlice({
         },
 
         getTaskSuccess(state, action){
+            console.log(action.payload.tasks)
             state.tasks = action.payload;
             state.loading = false;
             state.error = null;
-            state.message = null;
+            // state.message = action.payload.message;
         },
 
         getTaskFailed(state, action){
@@ -33,6 +34,31 @@ const taskSlice = createSlice({
             state.error = action.payload;
             state.message = null;
         },
+
+        // Update Task 
+        updateTaskRequest(state) {
+            state.loading = true;
+            state.error = null;
+            state.message = null;
+        },
+
+        updateTaskSuccess(state, action){
+            console.log(action.payload.message)
+            state.tasks = action.payload.task;
+            state.loading = false;
+            state.error = null;
+            state.message = action.payload.message;
+        },
+
+        updateTaskFailed(state, action) {
+            state.loading = false;
+            state.error = action.payload;
+            state.message = null;
+        },
+
+
+
+
 
         clearErrors(state){
             state.error = null;
@@ -45,6 +71,19 @@ const taskSlice = createSlice({
     }
 })
 
+export const updateTask = (taskId, taskData) => async (dispatch) => {
+    dispatch(taskSlice.actions.updateTaskRequest());
+    try {
+        const response = await axios.patch(`${baseUrl}/api/task/tasks/${taskId}`, taskData, {
+            withCredentials: true,
+        });
+        console.log(response.data)
+        dispatch(taskSlice.actions.updateTaskSuccess(response.data));
+    } catch (error) {
+        dispatch(taskSlice.actions.updateTaskFailed(error.response?.data?.message));
+    }
+};
+
 export const getTask = (filter) => async(dispatch)=>{
     dispatch(taskSlice.actions.getTaskRequest());
     try {
@@ -53,7 +92,6 @@ export const getTask = (filter) => async(dispatch)=>{
             withCredentials: true
         });
 
-        console.log(response)
         dispatch(taskSlice.actions.getTaskSuccess(response.data));
     } catch (error) {
         dispatch(taskSlice.actions.getTaskFailed(error.response?.data?.message || "Failed to fetch tasks"))

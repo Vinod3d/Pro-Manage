@@ -50,17 +50,17 @@
 }
 
 .menu button {
-    display: block; /* Stack buttons */
-    padding: 8px 17px; /* Button padding */
-    width: 100%; /* Full width */
-    border: none; /* Remove border */
-    background: none; /* No background */
+    display: block;
+    padding: 8px 17px;
+    width: 100%;
+    border: none;
+    background: none;
     text-align: left;
     font-size: 14px;
 }
 
 .menu button:hover {
-    background: #f0f0f0; /* Change background on hover */
+    background: #f0f0f0;
 }
 
 .title {
@@ -68,7 +68,42 @@
     font-weight: 500;
     margin: 8px 0;
     color: #333;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
 }
+
+.tooltip {
+    position: absolute;
+    top: 13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4A4644;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.tooltip::after {
+    content: "";
+    position: absolute;
+    bottom: -36%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent transparent #4A4644 transparent;
+    rotate: 180deg;
+}
+
 
 .checklistSummary {
     display: flex;
