@@ -16,7 +16,7 @@ const Settings = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const dispatch = useDispatch();
-  const {loading, message, error } = useSelector((state) => state.user);
+  const {user, loading, message, error } = useSelector((state) => state.user);
   
 
   const handleSubmit = (e) => {
@@ -68,7 +68,7 @@ const Settings = () => {
             <FiUser className={styles.icon} size={20} />
             <input
               type="text"
-              placeholder="Name"
+              placeholder={user?.name || user?.user?.name}
               value={name}
               onChange={(e) => setName(e.target.value)}
               className={styles.input}
@@ -78,7 +78,7 @@ const Settings = () => {
             <FiMail className={styles.icon} size={20} />
             <input
               type="email"
-              placeholder="Update Email"
+              placeholder={user?.email || user?.user?.email}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={styles.input}
