@@ -2,36 +2,47 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { FaPlus } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
-import Styles from './AddTask.module.css';
-import { useState } from "react";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import Styles from "./AddTask.module.css";
+import { useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearErrors,
+  clearMessage,
+  createTask,
+} from "../../store/slices/taskSlice";
+import { toast } from "react-toastify";
 
-export default function AddTaskModal({isOpen, onClose, }) {
-    if(!isOpen) return null;
-  const [title, setTitle] = useState('');
-  const [priority, setPriority] = useState('HIGH');
+export default function AddTaskModal({ isOpen, onClose }) {
+  const [title, setTitle] = useState("");
+  const [priority, setPriority] = useState("HIGH");
   const [checklist, setChecklist] = useState([
-    { id: 1, text: 'Done Task', done: true },
-    { id: 2, text: 'Task to be done', done: false },
+    { id: Date.now(), text: "", done: false },
   ]);
-  const [dueDate, setDueDate] = useState('');
+  const [dueDate, setDueDate] = useState("");
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+  const dispatch = useDispatch();
+  const { loading, error, message } = useSelector((state) => state.task);
 
   const handleAddChecklistItem = () => {
-    setChecklist([...checklist, { id: Date.now(), text: '', done: false }]);
+    setChecklist([...checklist, { id: Date.now(), text: "", done: false }]);
   };
 
   const handleChecklistChange = (id, done) => {
-    setChecklist(checklist.map(item => item.id === id ? { ...item, done } : item));
+    setChecklist(
+      checklist.map((item) => (item.id === id ? { ...item, done } : item))
+    );
   };
 
   const handleChecklistTextChange = (id, text) => {
-    setChecklist(checklist.map(item => item.id === id ? { ...item, text } : item));
+    setChecklist(
+      checklist.map((item) => (item.id === id ? { ...item, text } : item))
+    );
   };
 
   const handleRemoveChecklistItem = (id) => {
-    setChecklist(checklist.filter(item => item.id !== id));
+    setChecklist(checklist.filter((item) => item.id !== id));
   };
 
   const handleDateClick = () => {
@@ -42,12 +53,35 @@ export default function AddTaskModal({isOpen, onClose, }) {
     setDueDate(date);
     setDatePickerVisible(false);
   };
-  
+
   const handleSave = () => {
-    // onSave({ title, priority, assignee, checklist, dueDate });
+    const taskData = {
+      taskTitle: title,
+      priorityLevel: priority,
+      checklistItems: checklist.map((item) => ({
+        text: item.text,
+        isCompleted: item.done,
+      })),
+      dueDate: dueDate ? dueDate.toISOString() : null,
+    };
+
+    dispatch(createTask(taskData));
     onClose();
   };
 
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearErrors());
+    }
+
+    if (message) {
+      toast.success(message);
+      dispatch(clearMessage());
+    }
+  }, [message, error, dispatch]);
+
+  if (!isOpen) return null;
   return (
     <div className={Styles.modalOverlay} onClick={onClose}>
       <div className={Styles.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -68,35 +102,48 @@ export default function AddTaskModal({isOpen, onClose, }) {
 
           <div className={Styles.spacingLarge}>
             <div className={Styles.priorityGroup}>
-                <label>
+              <label>
                 Select Priority <span className="text-red">*</span>
-                </label>
-                <div className={Styles.radioGroup}>
-                {['HIGH', 'MODERATE', 'LOW'].map((p) => (
-                    <label key={p} className={Styles.radioLabel}>
+              </label>
+              <div className={Styles.radioGroup}>
+                {["HIGH", "MODERATE", "LOW"].map((p) => (
+                  <label key={p} className={Styles.radioLabel}>
                     <input
-                        type="radio"
-                        value={p}
-                        checked={priority === p}
-                        onChange={() => setPriority(p)}
+                      type="radio"
+                      value={p}
+                      checked={priority === p}
+                      onChange={() => setPriority(p)}
                     />
-                    <div className={`${Styles.radioLabelGroup} ${priority === p ? Styles.radioActive : ""}`}>
-                        <div>
-                            <span className={`${p === 'HIGH' ? Styles.radioHigh : p === 'MODERATE' ? Styles.radioModerate : Styles.radioLow} ${Styles.radioColorBox}`}>  </span>
-                            {p} PRIORITY
-                        </div>
+                    <div
+                      className={`${Styles.radioLabelGroup} ${
+                        priority === p ? Styles.radioActive : ""
+                      }`}
+                    >
+                      <div>
+                        <span
+                          className={`${
+                            p === "HIGH"
+                              ? Styles.radioHigh
+                              : p === "MODERATE"
+                              ? Styles.radioModerate
+                              : Styles.radioLow
+                          } ${Styles.radioColorBox}`}
+                        >
+                          {" "}
+                        </span>
+                        {p} PRIORITY
+                      </div>
                     </div>
-
-                    </label>
+                  </label>
                 ))}
-                </div>
+              </div>
             </div>
           </div>
 
-
           <div className={`${Styles.spacingLarge} ${Styles.checklistSection}`}>
             <label>
-              Checklist ({checklist.filter(item => item.done).length}/{checklist.length}) <span className="text-red">*</span>
+              Checklist ({checklist.filter((item) => item.done).length}/
+              {checklist.length}) <span className="text-red">*</span>
             </label>
             <ul className={Styles.checklistContainer}>
               {checklist.map((item) => (
@@ -104,60 +151,70 @@ export default function AddTaskModal({isOpen, onClose, }) {
                   <input
                     type="checkbox"
                     checked={item.done}
-                    onChange={(e) => handleChecklistChange(item.id, e.target.checked)}
+                    onChange={(e) =>
+                      handleChecklistChange(item.id, e.target.checked)
+                    }
                     className={Styles.checklistCheckbox}
                   />
                   <input
                     type="text"
                     value={item.text}
-                    onChange={(e) => handleChecklistTextChange(item.id, e.target.value)}
+                    onChange={(e) =>
+                      handleChecklistTextChange(item.id, e.target.value)
+                    }
                     className={Styles.checklistInput}
                     placeholder="Add a task"
                   />
-                  <button onClick={() => handleRemoveChecklistItem(item.id)} className={Styles.checklistRemoveButton}>
+                  <button
+                    onClick={() => handleRemoveChecklistItem(item.id)}
+                    className={Styles.checklistRemoveButton}
+                  >
                     <MdDelete size={20} />
                   </button>
                 </li>
               ))}
             </ul>
-            <button onClick={handleAddChecklistItem} className={Styles.addChecklistButton}>
-              <FaPlus  size={16} /> Add New
+            <button
+              onClick={handleAddChecklistItem}
+              className={Styles.addChecklistButton}
+            >
+              <FaPlus size={16} /> Add New
             </button>
-        </div>
+          </div>
 
-        <div className={`${Styles.spacingLarge} flex justify-between`}>
+          <div className={`${Styles.spacingLarge} flex justify-between`}>
             <div>
-                <label onClick={handleDateClick} className={Styles.dueDateLabel}>
-                {dueDate ? dueDate.toLocaleDateString() : 'Select Due Date'}
-                </label>
-                {isDatePickerVisible && (
-                   <div className={Styles.datePickerModal}>
-                    <DatePicker
-                        selected={dueDate}
-                        onChange={handleDateChange}
-                        inline
-                    />
-                 </div>
-                )}
+              <label onClick={handleDateClick} className={Styles.dueDateLabel}>
+                {dueDate ? dueDate.toLocaleDateString() : "Select Due Date"}
+              </label>
+              {isDatePickerVisible && (
+                <div className={Styles.datePickerModal}>
+                  <DatePicker
+                    selected={dueDate}
+                    onChange={handleDateChange}
+                    inline
+                  />
+                </div>
+              )}
             </div>
 
-                <div className={Styles.modalFooter}>
-                    <button
-                        type="button"
-                        onClick={handleSave}
-                        className={Styles.saveButton}
-                    >
-                        Save
-                    </button>
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className={Styles.cancelButton}
-                    >
-                        Cancel
-                    </button>
-                </div>
-        </div>
+            <div className={Styles.modalFooter}>
+              <button
+                type="button"
+                onClick={handleSave}
+                className={Styles.saveButton}
+              >
+                {loading ? "Saving..." : "Save"}
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className={Styles.cancelButton}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

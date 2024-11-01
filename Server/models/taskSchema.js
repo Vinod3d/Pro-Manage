@@ -21,6 +21,7 @@ const userTaskSchema = new mongoose.Schema({
         type: String,
         enum: ['HIGH', 'MEDIUM', 'LOW'],
         required: true,
+        default: 'HIGH',
     },
     assignedTo: {
         type: String,

@@ -12,6 +12,25 @@ const taskSlice = createSlice({
     },
 
     reducers :{
+
+        // Create Task
+
+        createTaskRequest(state) {
+            state.loading = true;
+            state.error = null;
+            state.message = null;
+        },
+        createTaskSuccess(state, action) {
+            state.task = action.payload;
+            state.loading = false;
+            state.error = null;
+            state.message = action.payload.message;
+        },
+        createTaskFailed(state, action) {
+            state.loading = false;
+            state.error = action.payload;
+            state.message = null;
+        },
         
         // Get Tasks
         getTaskRequest(state){
@@ -21,7 +40,6 @@ const taskSlice = createSlice({
         },
 
         getTaskSuccess(state, action){
-            console.log(action.payload.tasks)
             state.tasks = action.payload;
             state.loading = false;
             state.error = null;
@@ -41,6 +59,8 @@ const taskSlice = createSlice({
             state.error = null;
             state.message = null;
         },
+
+        // Update Task
 
         updateTaskSuccess(state, action){
             console.log(action.payload.message)
@@ -71,13 +91,24 @@ const taskSlice = createSlice({
     }
 })
 
+export const createTask = (taskData) => async (dispatch) => {
+    dispatch(taskSlice.actions.createTaskRequest());
+    try {
+      const response = await axios.post(`${baseUrl}/api/task/create`, taskData, {
+        withCredentials: true,
+      });
+      dispatch(taskSlice.actions.createTaskSuccess(response.data));
+    } catch (error) {
+      dispatch(taskSlice.actions.createTaskFailed(error.response?.data?.message || "Failed to create task"));
+    }
+};
+
 export const updateTask = (taskId, taskData) => async (dispatch) => {
     dispatch(taskSlice.actions.updateTaskRequest());
     try {
         const response = await axios.patch(`${baseUrl}/api/task/tasks/${taskId}`, taskData, {
             withCredentials: true,
         });
-        console.log(response.data)
         dispatch(taskSlice.actions.updateTaskSuccess(response.data));
     } catch (error) {
         dispatch(taskSlice.actions.updateTaskFailed(error.response?.data?.message));

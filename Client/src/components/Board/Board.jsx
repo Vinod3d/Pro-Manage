@@ -3,13 +3,12 @@ import Header from '../Header/Header';
 import TaskBoards from '../TaskBoards/TaskBoards';
 import Styles from './Board.module.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { clearErrors, clearMessage, getTask, updateTask } from '../../store/slices/taskSlice';
+import { clearErrors, clearMessage, getTask } from '../../store/slices/taskSlice';
 
 const Board = () => {
   const [selectedOption, setSelectedOption] = useState('thisWeek');
   const dispatch = useDispatch();
   const {tasks, error, message} = useSelector((state)=>state.task);
-  console.log(tasks)
 
   useEffect(()=>{
     if(message){
