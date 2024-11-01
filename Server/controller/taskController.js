@@ -171,9 +171,9 @@ export const analyticsdata = async (req, res) => {
                 $group: {
                     _id: null,
                     backlog: { $sum: { $cond: [{ $eq: ['$taskStatus', 'BACKLOG'] }, 1, 0] } },
-                    todo: { $sum: { $cond: [{ $eq: ['$taskStatus', 'TO_DO'] }, 1, 0] } },
-                    inProgress: { $sum: { $cond: [{ $eq: ['$taskStatus', 'IN_PROGRESS'] }, 1, 0] } },
-                    done: { $sum: { $cond: [{ $eq: ['$taskStatus', 'COMPLETED'] }, 1, 0] } },
+                    todo: { $sum: { $cond: [{ $eq: ['$taskStatus', 'TODO'] }, 1, 0] } },
+                    inProgress: { $sum: { $cond: [{ $eq: ['$taskStatus', 'PROGRESS'] }, 1, 0] } },
+                    done: { $sum: { $cond: [{ $eq: ['$taskStatus', 'DONE'] }, 1, 0] } },
                     lowPriority: { $sum: { $cond: [{ $eq: ['$priorityLevel', 'LOW'] }, 1, 0] } },
                     moderatePriority: { $sum: { $cond: [{ $eq: ['$priorityLevel', 'MEDIUM'] }, 1, 0] } },
                     highPriority: { $sum: { $cond: [{ $eq: ['$priorityLevel', 'HIGH'] }, 1, 0] } },
