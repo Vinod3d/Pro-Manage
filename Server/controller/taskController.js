@@ -100,6 +100,7 @@ export const getTaskById = async (req, res) => {
 export const updateTask = async (req, res, next) => {
     const { taskId } = req.params;
     const { taskTitle, priorityLevel, assignedTo, checklistItems, dueDate, taskStatus } = req.body;
+    console.log(priorityLevel)
     const updateFields = {};
 
     if (taskTitle) updateFields.taskTitle = taskTitle;

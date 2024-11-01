@@ -3,36 +3,51 @@
 import { FaPlus } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 import Styles from './EditTask.module.css';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import CustomDropdown from "../CustomDropdown/CustomDropdown";
+import { useDispatch, useSelector } from "react-redux";
+import { updateTask } from "../../store/slices/taskSlice";
 
-export default function EditTaskModal({isOpen, onClose, }) {
-    if(!isOpen) return null;
+export default function EditTaskModal({task, isOpen, onClose, }) {
+  const dispatch = useDispatch();
+  const {user} = useSelector((state)=> state.user);
+  const addPeople = user?.user?.addPeople || user?.addPeople;
+  
   const [title, setTitle] = useState('');
   const [priority, setPriority] = useState('HIGH');
   const [assignee, setAssignee] = useState('');
-  const [checklist, setChecklist] = useState([
-    { id: 1, text: 'Done Task', done: true },
-    { id: 2, text: 'Task to be done', done: false },
-  ]);
-  const [dueDate, setDueDate] = useState('');
+  const [checklist, setChecklist] = useState([]);
+  const [dueDate, setDueDate] = useState(null);
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+  const {_id: taskId, taskTitle, priorityLevel, assignedTo, checklistItems, dueDate: taskDueDate } = task || {};
+
+  useEffect(() => {
+    if (task) {
+      setTitle(taskTitle || '');
+      setPriority(priorityLevel || 'HIGH');
+      setAssignee(assignedTo || '');
+      setChecklist(checklistItems || []);
+      setDueDate(taskDueDate ? new Date(taskDueDate) : null);
+    }
+  }, [task, taskTitle, priorityLevel, assignedTo, checklistItems, taskDueDate]);
+
 
   const handleAddChecklistItem = () => {
-    setChecklist([...checklist, { id: Date.now(), text: '', done: false }]);
+    setChecklist([...checklist, { _id: Date.now(), text: '', isCompleted: false }]);
   };
 
   const handleChecklistChange = (id, done) => {
-    setChecklist(checklist.map(item => item.id === id ? { ...item, done } : item));
+    setChecklist(checklist.map(item => item._id === id ? { ...item, isCompleted:done } : item));
   };
 
   const handleChecklistTextChange = (id, text) => {
-    setChecklist(checklist.map(item => item.id === id ? { ...item, text } : item));
+    setChecklist(checklist.map(item => item._id === id ? { ...item, text } : item));
   };
 
   const handleRemoveChecklistItem = (id) => {
-    setChecklist(checklist.filter(item => item.id !== id));
+    setChecklist(checklist.filter(item => item._id !== id));
   };
 
   const handleDateClick = () => {
@@ -45,9 +60,29 @@ export default function EditTaskModal({isOpen, onClose, }) {
   };
   
   const handleSave = () => {
-    // onSave({ title, priority, assignee, checklist, dueDate });
+    const updatedTaskData = {
+      taskTitle: title,
+      priorityLevel: priority,
+      assignedTo: assignee,
+      checklistItems: checklist.map((item) => ({
+        text: item.text,
+        isCompleted: item.isCompleted,
+      })),
+      dueDate: dueDate ? dueDate.toISOString() : null,
+    };
+
+    dispatch(updateTask(taskId, updatedTaskData));
     onClose();
   };
+
+
+
+  // Function to handle selection of an email
+  const handleSelectAssignee = (email) => {
+    setAssignee(email);
+  };
+
+  if(!isOpen) return null;
 
   return (
     <div className={Styles.modalOverlay} onClick={onClose}>
@@ -73,7 +108,7 @@ export default function EditTaskModal({isOpen, onClose, }) {
                 Select Priority <span className="text-red">*</span>
                 </label>
                 <div className={Styles.radioGroup}>
-                {['HIGH', 'MODERATE', 'LOW'].map((p) => (
+                {['HIGH', 'MEDIUM', 'LOW'].map((p) => (
                     <label key={p} className={Styles.radioLabel}>
                     <input
                         type="radio"
@@ -83,7 +118,7 @@ export default function EditTaskModal({isOpen, onClose, }) {
                     />
                     <div className={`${Styles.radioLabelGroup} ${priority === p ? Styles.radioActive : ""}`}>
                         <div>
-                            <span className={`${p === 'HIGH' ? Styles.radioHigh : p === 'MODERATE' ? Styles.radioModerate : Styles.radioLow} ${Styles.radioColorBox}`}>  </span>
+                            <span className={`${p === 'HIGH' ? Styles.radioHigh : p === 'MEDIUM' ? Styles.radioModerate : Styles.radioLow} ${Styles.radioColorBox}`}>  </span>
                             {p} PRIORITY
                         </div>
                     </div>
@@ -98,37 +133,34 @@ export default function EditTaskModal({isOpen, onClose, }) {
             <label htmlFor="assignee">
               Assign to
             </label>
-            <input
-              type="text"
-              id="assignee"
-              value={assignee}
-              onChange={(e) => setAssignee(e.target.value)}
-              className={Styles.inputField}
-              placeholder="Add an assignee"
+            <CustomDropdown
+              addPeople={addPeople}
+              assignee={assignee}
+              onSelect={handleSelectAssignee}
             />
           </div>
 
           <div className={`${Styles.spacingLarge} ${Styles.checklistSection}`}>
             <label>
-              Checklist ({checklist.filter(item => item.done).length}/{checklist.length}) *
+              Checklist ({checklist.filter(item => item.isCompleted).length}/{checklist.length}) *
             </label>
             <ul className={Styles.checklistContainer}>
               {checklist.map((item) => (
-                <li key={item.id} className={Styles.checklistItem}>
+                <li key={item._id} className={Styles.checklistItem}>
                   <input
                     type="checkbox"
-                    checked={item.done}
-                    onChange={(e) => handleChecklistChange(item.id, e.target.checked)}
+                    checked={item.isCompleted}
+                    onChange={(e) => handleChecklistChange(item._id, e.target.checked)}
                     className={Styles.checklistCheckbox}
                   />
                   <input
                     type="text"
                     value={item.text}
-                    onChange={(e) => handleChecklistTextChange(item.id, e.target.value)}
+                    onChange={(e) => handleChecklistTextChange(item._id, e.target.value)}
                     className={Styles.checklistInput}
                     placeholder="Add a task"
                   />
-                  <button onClick={() => handleRemoveChecklistItem(item.id)} className={Styles.checklistRemoveButton}>
+                  <button onClick={() => handleRemoveChecklistItem(item._id)} className={Styles.checklistRemoveButton}>
                     <MdDelete size={20} />
                   </button>
                 </li>
@@ -161,7 +193,7 @@ export default function EditTaskModal({isOpen, onClose, }) {
                         onClick={handleSave}
                         className={Styles.saveButton}
                     >
-                        Save
+                        Update
                     </button>
                     <button
                         type="button"

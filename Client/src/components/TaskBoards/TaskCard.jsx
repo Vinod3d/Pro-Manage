@@ -6,7 +6,7 @@ import { useDispatch, } from 'react-redux';
 import {updateTask } from '../../store/slices/taskSlice';
 
 const TaskCard = ({ task, onEdit, onDelete, onShare, isCollapsed, setCollapsedAll }) => {
-    const { taskTitle, priorityLevel, dueDate, checklistItems, taskStatus } = task;
+    const { taskTitle, assignedTo, priorityLevel, dueDate, checklistItems, taskStatus } = task;
     const [isExpanded, setIsExpanded] = useState(isCollapsed);
     const [checklistHeight, setChecklistHeight] = useState(0);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,7 +16,6 @@ const TaskCard = ({ task, onEdit, onDelete, onShare, isCollapsed, setCollapsedAl
     const menuRef = useRef(null);
     const titleRef = useRef(null);
     const dispatch = useDispatch()
-
 
     const maxTitleLength = 29;
 
@@ -119,7 +118,7 @@ const TaskCard = ({ task, onEdit, onDelete, onShare, isCollapsed, setCollapsedAl
 
 
     const handleEdit = ()=>{
-        onEdit()
+        onEdit(task)
         setIsMenuOpen(false)
     }
 
@@ -135,11 +134,17 @@ const TaskCard = ({ task, onEdit, onDelete, onShare, isCollapsed, setCollapsedAl
         }));
     
         setLocalChecklistItems(updatedChecklist);
-        dispatch(updateTask(task._id, { checklistItems: updatedChecklist }));
+        dispatch(updateTask(task._id, { 
+            checklistItems: updatedChecklist,
+            dueDate: dueDate
+         }));
     };
 
     const handleStatusChange = (status) =>{
-        dispatch(updateTask(task._id, { taskStatus: status }))
+        dispatch(updateTask(task._id, { 
+            taskStatus: status,
+            dueDate: dueDate
+         }))
     }
     
     
@@ -152,6 +157,10 @@ const TaskCard = ({ task, onEdit, onDelete, onShare, isCollapsed, setCollapsedAl
                     <span className={StylesTaskCard.priorityText}>
                         {priorityLevel === 'HIGH' ? 'High Priority' : priorityLevel === 'MEDIUM' ? 'Moderate Priority' : 'Low Priority'}
                     </span>
+                    {
+                        assignedTo ? <div className={StylesTaskCard.avatar}>{assignedTo?.slice(0, 2).toUpperCase()}</div> : null
+                    }
+                    
                 </div>
                 <button className={StylesTaskCard.menuButton} onClick={toggleMenu}>
                     <MdMoreHoriz size={24} />

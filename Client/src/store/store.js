@@ -2,26 +2,26 @@ import {combineReducers, configureStore} from "@reduxjs/toolkit"
 import userReducer from './slices/userSlice.js'
 import taskReducer from './slices/taskSlice.js'
 import analyticsReducer from './slices/analyticsSlice.js'
+import singleTaskReducer from './slices/singleTaskSlice.js';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['user', 'task', 'analytics'],
+    whitelist: ['user'],
 }
 
 const rootReducer = combineReducers({
-    user: userReducer,
+    user: persistReducer(persistConfig, userReducer),
     task: taskReducer,
     analytics: analyticsReducer,
+    singleTask: singleTaskReducer,
 });
 
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
 export const store = configureStore({
-    reducer: persistedReducer,
+    reducer: rootReducer,
 
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

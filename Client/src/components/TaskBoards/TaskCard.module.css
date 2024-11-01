@@ -28,6 +28,20 @@
     margin-left: 8px;
 }
 
+.avatar {
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background-color: #FFEBEB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 500;
+    color: #000;
+    margin-left: 13px;
+}
+
 .menuButton {
     background: none;
     border: none;
@@ -95,7 +109,7 @@
 .tooltip::after {
     content: "";
     position: absolute;
-    bottom: -36%;
+    bottom: -32%;
     left: 50%;
     transform: translateX(-50%);
     border-width: 6px;

@@ -117,7 +117,7 @@ const Login = () => {
                         {errors.password && <p className={styles.error}>{errors.password}</p>}
                     </div>
                     <button type="submit" className={styles.loginButton} disabled={loading}>
-                        {loading ? "Logging..." : "Login"}
+                    {loading ? "Logging in..." : "Login"}
                     </button>
                 </form>
                 <p className={styles.registerText}>

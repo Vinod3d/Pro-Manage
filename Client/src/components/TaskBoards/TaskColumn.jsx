@@ -12,12 +12,14 @@ const TaskColumn = ({ title, tasks, onAddTask }) => {
     const [collapsedAll, setCollapsedAll] = useState(false);
     const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
     const [isOkModalOpen, setIsOkModalOpen] = useState(false);
+    const [selectedTask, setSelectedTask] = useState(null);
 
     const handleCollapseAll = () => {
         setCollapsedAll(true);
     };
 
-    const handleEditTaskOpen = () => {
+    const handleEditTaskOpen = (task) => {
+        setSelectedTask(task);
         setIsEditTaskModalOpen(true);
     };
 
@@ -70,6 +72,7 @@ const TaskColumn = ({ title, tasks, onAddTask }) => {
       </div>
 
       <EditTaskModal
+        task={selectedTask}
         isOpen={isEditTaskModalOpen}
         onClose={handleEditTaskClose}
       />

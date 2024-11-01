@@ -103,7 +103,7 @@ export const createTask = (taskData) => async (dispatch) => {
     }
 };
 
-export const updateTask = (taskId, taskData) => async (dispatch) => {
+export const updateTask = (taskId, taskData) => async (dispatch) => { 
     dispatch(taskSlice.actions.updateTaskRequest());
     try {
         const response = await axios.patch(`${baseUrl}/api/task/tasks/${taskId}`, taskData, {

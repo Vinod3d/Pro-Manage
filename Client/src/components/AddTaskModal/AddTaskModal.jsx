@@ -106,7 +106,7 @@ export default function AddTaskModal({ isOpen, onClose }) {
                 Select Priority <span className="text-red">*</span>
               </label>
               <div className={Styles.radioGroup}>
-                {["HIGH", "MODERATE", "LOW"].map((p) => (
+                {["HIGH", "MEDIUM", "LOW"].map((p) => (
                   <label key={p} className={Styles.radioLabel}>
                     <input
                       type="radio"
@@ -124,7 +124,7 @@ export default function AddTaskModal({ isOpen, onClose }) {
                           className={`${
                             p === "HIGH"
                               ? Styles.radioHigh
-                              : p === "MODERATE"
+                              : p === "MEDIUM"
                               ? Styles.radioModerate
                               : Styles.radioLow
                           } ${Styles.radioColorBox}`}

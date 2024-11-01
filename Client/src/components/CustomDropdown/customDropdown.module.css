@@ -1,0 +1,92 @@
+.customDropdown {
+    position: relative;
+    width: 100%;
+    font-family: Arial, sans-serif;
+}
+  
+.dropdownHeader {
+    margin-top: 0.25rem;
+    display: block;
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    padding: 0.5rem;
+    font-size: 0.875rem;
+}
+  
+.dropdownOptions {
+    position: absolute;
+    top: 45px;
+    left: 0;
+    width: 100%;
+    border: 1px solid #ddd;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+.dropdownOptions::-webkit-scrollbar {
+    width: 8px;
+}
+  
+.optionItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+  
+/* .optionItem:hover {
+    background-color: #f0f0f0;
+} */
+  
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #FFEBEB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #000;
+    margin-right: 10px;
+}
+  
+.emailText {
+    padding: 0 15px;
+    font-size: 15px;
+    color: #20102B;
+
+}
+  
+.assignButton {
+    padding: 4px 28px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: #fff;
+    color: #767575;
+    border: 1px solid #E2E2E2;
+    border-radius: 8px;
+}
+  
+.assignButton:hover {
+    background-color: #f0f0f0;
+    color: #333;
+    border-color: #ccc;
+}
+
+.noMembers {
+    padding: 8px;
+    color: #888;
+    text-align: center;
+  }
+  

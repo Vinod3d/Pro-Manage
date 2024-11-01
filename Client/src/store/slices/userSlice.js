@@ -83,8 +83,8 @@ const userSlice = createSlice({
 
 
         checkSession: (state, action)=>{
-            state.isAuthenticated = action.payload.loggedIn && true;
-            state.user = action.payload.user ? action.payload.user : null;
+            state.isAuthenticated = action.payload.loggedIn;
+            state.user = action.payload.user || null;
         },
 
         checkSessionFailed: (state, action)=>{
