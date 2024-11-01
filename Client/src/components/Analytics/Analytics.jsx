@@ -1,33 +1,28 @@
-import { useState } from 'react';
-
+import { useEffect } from 'react';
 import styles from './Analytics.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAnalyticsData } from '../../store/slices/analyticsSlice';
 
 export default function Analytics() {
-  const [analyticsData, setAnalyticsData] = useState({
-    backlogTasks: 0,
-    todoTasks: 0,
-    inProgressTasks: 0,
-    completedTasks: 0,
-    lowPriority: 0,
-    moderatePriority: 0,
-    highPriority: 0,
-    dueDateTasks: 0,
-  });
+  const analytics = useSelector(state => state.analytics.analytics);
+  const dispatch = useDispatch();
 
-
+  useEffect(() => {
+    dispatch(fetchAnalyticsData());
+  }, [dispatch]);
 
   const leftColumnStats = [
-    { name: "Backlog Tasks", value: analyticsData.backlogTasks },
-    { name: "To-do Tasks", value: analyticsData.todoTasks },
-    { name: "In-Progress Tasks", value: analyticsData.inProgressTasks },
-    { name: "Completed Tasks", value: analyticsData.completedTasks },
+    { name: "Backlog Tasks", value: analytics.backlog },
+    { name: "To-do Tasks", value: analytics.todo },
+    { name: "In-Progress Tasks", value: analytics.inProgress },
+    { name: "Completed Tasks", value: analytics.done },
   ];
 
   const rightColumnStats = [
-    { name: "Low Priority", value: analyticsData.lowPriority },
-    { name: "Moderate Priority", value: analyticsData.moderatePriority },
-    { name: "High Priority", value: analyticsData.highPriority },
-    { name: "Due Date Tasks", value: analyticsData.dueDateTasks },
+    { name: "Low Priority", value: analytics.lowPriority },
+    { name: "Moderate Priority", value: analytics.moderatePriority },
+    { name: "High Priority", value: analytics.highPriority },
+    { name: "Due Date Tasks", value: analytics.dueDateTasks },
   ];
 
   return (
