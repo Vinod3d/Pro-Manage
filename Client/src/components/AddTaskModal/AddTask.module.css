@@ -45,11 +45,11 @@
 
 .modalOpen {
     animation: scaleIn 0.6s forwards;
-  }
+}
   
-  .modalClose {
+.modalClose {
     animation: scaleOut 0.6s forwards;
-  }
+}
   
 .paddingLarge {
     padding: 5px;
@@ -212,6 +212,11 @@
     border: none;
     background-color: white;
 }
+
+.noteMessage{
+    color: red;
+    font-size: 14px;
+}
   
 .addChecklistButton {
     display: inline-flex;
@@ -280,6 +285,13 @@
   
   .saveButton:hover {
     background-color: #138496;
+  }
+
+  .saveButton:disabled {
+    background-color: #b5b5b5;
+    color: #e0e0e0; 
+    cursor: not-allowed;
+    box-shadow: none;
   }
 
   .cancelButton {

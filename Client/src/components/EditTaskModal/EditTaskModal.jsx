@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateTask } from "../../store/slices/taskSlice";
 
 export default function EditTaskModal({task, isOpen, onClose, }) {
+  const [isClosing, setIsClosing] = useState(false);
   const dispatch = useDispatch();
   const {user} = useSelector((state)=> state.user);
   const addPeople = user?.user?.addPeople || user?.addPeople;
@@ -22,6 +23,7 @@ export default function EditTaskModal({task, isOpen, onClose, }) {
   const [dueDate, setDueDate] = useState(null);
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const {_id: taskId, taskTitle, priorityLevel, assignedTo, checklistItems, dueDate: taskDueDate } = task || {};
+  const isSaveDisabled = checklist.length === 0 || !checklist.some((item) => item.text.trim() !== "");
 
   useEffect(() => {
     if (task) {
@@ -75,18 +77,24 @@ export default function EditTaskModal({task, isOpen, onClose, }) {
     onClose();
   };
 
-
-
-  // Function to handle selection of an email
   const handleSelectAssignee = (email) => {
     setAssignee(email);
+  };
+
+  useEffect(() => {
+    if (!isOpen) setIsClosing(false);
+  }, [isOpen]);
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(onClose, 400);
   };
 
   if(!isOpen) return null;
 
   return (
-    <div className={Styles.modalOverlay} onClick={onClose}>
-      <div className={Styles.modalContent} onClick={(e) => e.stopPropagation()}>
+    <div className={Styles.modalOverlay} onClick={handleClose}>
+      <div className={`${Styles.modalContent} ${isClosing ? Styles.modalClose : Styles.modalOpen}`} onClick={(e) => e.stopPropagation()}>
         <div className={Styles.paddingLarge}>
           <div className={`${Styles.spacingLarge} ${Styles.titleSection}`}>
             <label htmlFor="title">
@@ -165,6 +173,11 @@ export default function EditTaskModal({task, isOpen, onClose, }) {
                   </button>
                 </li>
               ))}
+              {
+                isSaveDisabled ?
+                <p className={Styles.noteMessage}>Note: Please add at least one checklist item; otherwise, you will not be able to save the task.</p>
+                : null
+              }
             </ul>
             <button onClick={handleAddChecklistItem} className={Styles.addChecklistButton}>
               <FaPlus  size={16} /> Add New
@@ -192,12 +205,13 @@ export default function EditTaskModal({task, isOpen, onClose, }) {
                         type="button"
                         onClick={handleSave}
                         className={Styles.saveButton}
+                        disabled={isSaveDisabled}
                     >
                         Update
                     </button>
                     <button
                         type="button"
-                        onClick={onClose}
+                        onClick={handleClose}
                         className={Styles.cancelButton}
                     >
                         Cancel

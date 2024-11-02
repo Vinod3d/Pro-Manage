@@ -21,6 +21,7 @@ export default function AddTaskModal({ isOpen, onClose }) {
   const [checklist, setChecklist] = useState([
     { id: Date.now(), text: "", done: false },
   ]);
+  const isSaveDisabled = checklist.length === 0 || !checklist.some((item) => item.text.trim() !== "");
   const [dueDate, setDueDate] = useState("");
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const dispatch = useDispatch();
@@ -89,7 +90,7 @@ export default function AddTaskModal({ isOpen, onClose }) {
 
   const handleClose = () => {
     setIsClosing(true);
-    setTimeout(onClose, 300);
+    setTimeout(onClose, 400);
   };
 
   if (!isOpen) return null;
@@ -184,6 +185,12 @@ export default function AddTaskModal({ isOpen, onClose }) {
                   </button>
                 </li>
               ))}
+              {
+                isSaveDisabled ?
+                <p className={Styles.noteMessage}>Note: Please add at least one checklist item; otherwise, you will not be able to save the task.</p>
+                : null
+              }
+              
             </ul>
             <button
               onClick={handleAddChecklistItem}
@@ -214,6 +221,7 @@ export default function AddTaskModal({ isOpen, onClose }) {
                 type="button"
                 onClick={handleSave}
                 className={Styles.saveButton}
+                disabled={isSaveDisabled}
               >
                 {loading ? "Saving..." : "Save"}
               </button>

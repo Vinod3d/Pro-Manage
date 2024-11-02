@@ -68,8 +68,8 @@ const Settings = () => {
             <FiUser className={styles.icon} size={20} />
             <input
               type="text"
-              placeholder={user?.name || user?.user?.name}
-              value={name}
+              placeholder="Name"
+              value={user?.name || user?.user?.name}
               onChange={(e) => setName(e.target.value)}
               className={styles.input}
             />
@@ -78,8 +78,8 @@ const Settings = () => {
             <FiMail className={styles.icon} size={20} />
             <input
               type="email"
-              placeholder={user?.email || user?.user?.email}
-              value={email}
+              placeholder="Email"
+              value={user?.email || user?.user?.email}
               onChange={(e) => setEmail(e.target.value)}
               className={styles.input}
             />
