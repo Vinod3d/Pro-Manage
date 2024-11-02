@@ -4,6 +4,7 @@ import TaskBoards from '../TaskBoards/TaskBoards';
 import Styles from './Board.module.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { clearErrors, clearMessage, getTask } from '../../store/slices/taskSlice';
+import { fetchAnalyticsData } from '../../store/slices/analyticsSlice';
 
 const Board = () => {
   const [selectedOption, setSelectedOption] = useState('thisWeek');
@@ -20,6 +21,11 @@ const Board = () => {
 
     dispatch(getTask(selectedOption));
   },[dispatch, error, message, selectedOption])
+
+
+  useEffect(() => {
+    dispatch(fetchAnalyticsData());
+  }, [dispatch]);
 
   const handleSelectDate = (option) => {
     setSelectedOption(option);

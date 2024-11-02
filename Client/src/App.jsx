@@ -23,7 +23,13 @@ function App() {
     initializeAuth();
   }, [dispatch]);
 
-  if (loading) return <div>Loading data from Server...</div>;
+  if (loading) {
+    return (
+      <div className="loader-container">
+        <div className="loader"></div>
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>

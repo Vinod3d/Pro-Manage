@@ -15,6 +15,7 @@ import {
 import { toast } from "react-toastify";
 
 export default function AddTaskModal({ isOpen, onClose }) {
+  const [isClosing, setIsClosing] = useState(false);
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState("HIGH");
   const [checklist, setChecklist] = useState([
@@ -81,10 +82,20 @@ export default function AddTaskModal({ isOpen, onClose }) {
     // }
   }, [message, error, dispatch]);
 
+  useEffect(() => {
+    if (!isOpen) setIsClosing(false);
+  }, [isOpen]);
+
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(onClose, 300);
+  };
+
   if (!isOpen) return null;
   return (
-    <div className={Styles.modalOverlay} onClick={onClose}>
-      <div className={Styles.modalContent} onClick={(e) => e.stopPropagation()}>
+    <div className={Styles.modalOverlay} onClick={handleClose}>
+      <div className={`${Styles.modalContent} ${isClosing ? Styles.modalClose : Styles.modalOpen}`} onClick={(e) => e.stopPropagation()}>
         <div className={Styles.paddingLarge}>
           <div className={`${Styles.spacingLarge} ${Styles.titleSection}`}>
             <label htmlFor="title">
@@ -208,7 +219,7 @@ export default function AddTaskModal({ isOpen, onClose }) {
               </button>
               <button
                 type="button"
-                onClick={onClose}
+                onClick={handleClose}
                 className={Styles.cancelButton}
               >
                 Cancel

@@ -22,7 +22,7 @@ export default function OkModal({ isOpen, onClose, onOk, titleText, btnText }) {
         className={`${styles.modalContainer} ${
           isClosing ? styles.modalClose : styles.modalOpen
         }`}
-        onClick={(e) => e.stopPropagation()} // Prevent close on inner click
+        onClick={(e) => e.stopPropagation()}
       >
         <h3 className={styles.modalTitle}>{titleText}</h3>
         <div className={styles.buttonContainer}>

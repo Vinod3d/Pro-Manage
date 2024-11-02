@@ -1,101 +1,102 @@
-
 .modalOverlay {
-    position: fixed;
-    inset: 0;
-    background-color: #070f1461 ;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-  }
-  
-  @keyframes scaleIn {
-    0% {
-      transform: scale(0);
-      opacity: 0;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  @keyframes scaleOut {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(0);
-        opacity: 0;
-    }
+  position: fixed;
+  inset: 0;
+  background-color: #070f1461;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
 }
-  
-  .modalContainer {
-    background-color: white;
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    width: 23rem;
+
+@keyframes scaleIn {
+  0% {
     transform: scale(0);
-    animation: scaleIn 0.6s ease forwards;
     opacity: 0;
   }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 
-  .modalOpen {
-    animation: scaleIn 0.3s forwards;
+@keyframes scaleOut {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+.modalContainer {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  width: 23rem;
+  transform: scale(0);
+  animation: scaleIn 0.6s ease forwards;
+  opacity: 0;
+}
+
+.modalOpen {
+  animation: scaleIn 0.3s forwards;
 }
 
 .modalClose {
-    animation: scaleOut 0.3s forwards;
+  animation: scaleOut 0.3s forwards;
 }
-  
-  .modalTitle {
-    font-size: 1rem;
-    font-weight: bold;
-    margin: 1rem;
-    text-align: center;
-  }
-  
-  .buttonContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
 
-  .buttonContainer button{
-    padding: 1rem;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 700;
-  }
-  
-  .logoutButton {
-    width: 100%;
-    padding: 0.5rem;
-    margin-top: 8px;
-    background-color: #17A2B8;
-    color: white;
-    transition: background-color 0.3s, color 0.3s;
-    border: none;
-  }
-  
-  .logoutButton:hover {
-    background-color: #138496;
-  }
-  
-  .cancelButton {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #CF3636;
-    color: #CF3636;
-    border-radius: 0.375rem;
-    background-color: white;
-    transition: background-color 0.3s, color 0.3s;
-  }
-  
-  .cancelButton:hover {
-    background-color: #CF3636;
-    color: white;
-  }
-  
-  
+.modalTitle {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 1rem;
+  text-align: center;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.buttonContainer button {
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.logoutButton {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 8px;
+  background-color: #17a2b8;
+  color: white;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  border: none;
+}
+
+.logoutButton:hover {
+  background-color: #138496;
+}
+
+.cancelButton {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #cf3636;
+  color: #cf3636;
+  border-radius: 0.375rem;
+  background-color: white;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.cancelButton:hover {
+  background-color: #cf3636;
+  color: white;
+}

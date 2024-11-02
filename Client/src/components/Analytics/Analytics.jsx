@@ -1,15 +1,8 @@
-import { useEffect } from 'react';
 import styles from './Analytics.module.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchAnalyticsData } from '../../store/slices/analyticsSlice';
+import { useSelector } from 'react-redux';
 
 export default function Analytics() {
   const analytics = useSelector(state => state.analytics.analytics);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchAnalyticsData());
-  }, [dispatch]);
 
   const leftColumnStats = [
     { name: "Backlog Tasks", value: analytics.backlog },
