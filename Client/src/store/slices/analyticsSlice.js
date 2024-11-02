@@ -52,7 +52,6 @@ export const fetchAnalyticsData = () => async (dispatch) => {
             withCredentials: true,
         });
         dispatch(analyticsSlice.actions.fetchAnalyticsSuccess(response.data));
-        console.log(response)
     } catch (error) {
         dispatch(analyticsSlice.actions.fetchAnalyticsFailed(error.response?.data?.message || "Failed to fetch analytics"));
     }

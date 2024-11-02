@@ -21,7 +21,8 @@ const taskSlice = createSlice({
             state.message = null;
         },
         createTaskSuccess(state, action) {
-            state.task = action.payload;
+            const newTask = action.payload.task;
+            state.tasks[newTask._id] = newTask; 
             state.loading = false;
             state.error = null;
             state.message = action.payload.message;
@@ -62,15 +63,36 @@ const taskSlice = createSlice({
 
         // Update Task
 
-        updateTaskSuccess(state, action){
-            console.log(action.payload.message)
-            state.tasks = action.payload.task;
+        updateTaskSuccess(state, action) {
+            const updatedTask = action.payload.task; 
+            state.tasks = state.tasks.map(task =>
+                task._id === updatedTask._id ? updatedTask : task
+            );
             state.loading = false;
             state.error = null;
             state.message = action.payload.message;
         },
 
         updateTaskFailed(state, action) {
+            state.loading = false;
+            state.error = action.payload;
+            state.message = null;
+        },
+
+        // Delete Task
+        deleteTaskRequest(state) {
+            state.loading = true;
+            state.error = null;
+            state.message = null;
+        },
+        deleteTaskSuccess(state, action) {
+            console.log(action.payload)
+            state.tasks = state.tasks.filter(task => task._id !== action.payload.taskId);
+            state.loading = false;
+            state.error = null;
+            state.message = action.payload.message || 'task deleted';
+        },
+        deleteTaskFailed(state, action) {
             state.loading = false;
             state.error = action.payload;
             state.message = null;
@@ -128,6 +150,19 @@ export const getTask = (filter) => async(dispatch)=>{
         dispatch(taskSlice.actions.getTaskFailed(error.response?.data?.message || "Failed to fetch tasks"))
     }
 }
+
+export const deleteTask = (taskId) => async (dispatch) => {
+    dispatch(taskSlice.actions.deleteTaskRequest());
+    try {
+        const response = await axios.delete(`${baseUrl}/api/task/${taskId}`, {
+            withCredentials: true,
+        });
+
+        dispatch(taskSlice.actions.deleteTaskSuccess({...response.data, taskId }));
+    } catch (error) {
+        dispatch(taskSlice.actions.deleteTaskFailed(error.response?.data?.message));
+    }
+};
 
 export const clearErrors = () => (dispatch) => {
     dispatch(taskSlice.actions.clearErrors());

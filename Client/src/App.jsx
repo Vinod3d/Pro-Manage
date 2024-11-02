@@ -9,6 +9,7 @@ import PrivateRoute from './components/PrivateRoute';
 import { checkAuthSession } from './store/slices/userSlice';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PublicPage from './pages/publicPage/PublicPage.jsx';
 
 function App() {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ function App() {
     initializeAuth();
   }, [dispatch]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>Loading data from Server...</div>;
 
   return (
     <BrowserRouter>
@@ -31,6 +32,7 @@ function App() {
         <Route path='/' element={<Login />} />
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
+        <Route path='/public/sharelink/:taskId' element={<PublicPage/>} />
         <Route path='*' element={<NotFound />} />
       </Routes>
       <ToastContainer position='top-right' />

@@ -4,8 +4,9 @@ import { MdExpandMore, MdMoreHoriz } from "react-icons/md";
 import StylesTaskCard from './TaskCard.module.css';
 import { useDispatch, } from 'react-redux';
 import {updateTask } from '../../store/slices/taskSlice';
+import { toast } from 'react-toastify';
 
-const TaskCard = ({ task, onEdit, onDelete, onShare, isCollapsed, setCollapsedAll }) => {
+const TaskCard = ({ task, onEdit, onDelete, isCollapsed, setCollapsedAll }) => {
     const { taskTitle, assignedTo, priorityLevel, dueDate, checklistItems, taskStatus } = task;
     const [isExpanded, setIsExpanded] = useState(isCollapsed);
     const [checklistHeight, setChecklistHeight] = useState(0);
@@ -123,7 +124,7 @@ const TaskCard = ({ task, onEdit, onDelete, onShare, isCollapsed, setCollapsedAl
     }
 
     const handleDelete = () =>{
-        onDelete()
+        onDelete(task._id)
         setIsMenuOpen(false)
     }
 
@@ -147,7 +148,16 @@ const TaskCard = ({ task, onEdit, onDelete, onShare, isCollapsed, setCollapsedAl
          }))
     }
     
-    
+    const handleShare = () => {
+        const shareLink = `${window.location.origin}/public/sharelink/${task?._id}`;
+        navigator.clipboard.writeText(shareLink)
+        .then(() => {
+            toast.success("Link copied");
+        })
+        .catch(() => {
+            toast.error("Failed to copy");
+        });
+    };
 
     return (
         <div className={StylesTaskCard.card}>
@@ -168,7 +178,7 @@ const TaskCard = ({ task, onEdit, onDelete, onShare, isCollapsed, setCollapsedAl
                 {isMenuOpen && (
                     <div className={StylesTaskCard.menu} ref={menuRef}>
                         <button onClick={handleEdit}>Edit</button>
-                        <button onClick={onShare}>Share</button>
+                        <button onClick={handleShare}>Share</button>
                         <button onClick={handleDelete} style={{color:'#ff2121'}}>Delete</button>
                     </div>
                 )}

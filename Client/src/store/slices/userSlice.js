@@ -74,7 +74,6 @@ const userSlice = createSlice({
         },
 
         logoutFailed: (state, action)=>{
-            console.log(action.payload)
             state.user = null;
             state.isAuthenticated = false;
             state.error = action.payload;
@@ -233,8 +232,6 @@ export const addMember = (email) => async (dispatch) => {
           withCredentials: true,
         }
       );
-
-      console.log(response.data)
   
       dispatch(userSlice.actions.addMemberSuccess({
         email: email,

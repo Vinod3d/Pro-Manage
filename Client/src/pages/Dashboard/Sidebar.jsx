@@ -5,7 +5,7 @@ import { TbLogout } from "react-icons/tb";
 import styles from './Sidebar.module.css';
 import { useDispatch } from 'react-redux';
 import { logout, } from '../../store/slices/userSlice';
-import OkModal from '../../components/okModal/okModal';
+import OkModal from '../../components/okModal/OkModal';
 
 const Sidebar = ({ selectedTab, onSelectTab }) => {
     const [isOkModalOpen, setIsOkModalOpen] = useState(false);

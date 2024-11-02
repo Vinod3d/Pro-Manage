@@ -4,15 +4,21 @@ import { collaps } from "../../assets/Index";
 import { FaPlus } from "react-icons/fa6";
 import TaskCard from "./TaskCard";
 import { VscCollapseAll } from "react-icons/vsc";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditTaskModal from "../EditTaskModal/EditTaskModal";
-import OkModal from "../okModal/okModal";
+import OkModal from "../okModal/OkModal";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteTask } from "../../store/slices/taskSlice";
+import { toast } from "react-toastify";
+import { clearErrors, clearMessage } from "../../store/slices/userSlice";
 
 const TaskColumn = ({ title, tasks, onAddTask }) => {
     const [collapsedAll, setCollapsedAll] = useState(false);
     const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
     const [isOkModalOpen, setIsOkModalOpen] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
+    const dispatch = useDispatch();
+    const {message, error} = useSelector((state)=>state.task)
 
     const handleCollapseAll = () => {
         setCollapsedAll(true);
@@ -27,13 +33,28 @@ const TaskColumn = ({ title, tasks, onAddTask }) => {
         setIsEditTaskModalOpen(false);
     };
 
-    const handleDeleteModalOpen = ()=>{
-        setIsOkModalOpen(true);
+    const handleDeleteModalOpen = (taskId)=>{
+      setSelectedTask(taskId);
+      setIsOkModalOpen(true);
     }
 
     const handleDelete = ()=>{
-
+      if (selectedTask) {
+        dispatch(deleteTask(selectedTask));
+        setIsOkModalOpen(false);
     }
+    }
+
+    useEffect(()=>{
+      if(message){
+        toast.success(message);
+        clearMessage()
+      }
+      if (error) {
+        toast.error(error)
+        clearErrors()
+      }
+    },[error, message])
 
   return (
     <div className={StylesTaskColumn.column}>

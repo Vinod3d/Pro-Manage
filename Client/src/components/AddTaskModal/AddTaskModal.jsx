@@ -9,7 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearErrors,
-  clearMessage,
+  // clearMessage,
   createTask,
 } from "../../store/slices/taskSlice";
 import { toast } from "react-toastify";
@@ -75,10 +75,10 @@ export default function AddTaskModal({ isOpen, onClose }) {
       dispatch(clearErrors());
     }
 
-    if (message) {
-      toast.success(message);
-      dispatch(clearMessage());
-    }
+    // if (message) {
+    //   // toast.success(message);
+    //   dispatch(clearMessage());
+    // }
   }, [message, error, dispatch]);
 
   if (!isOpen) return null;
