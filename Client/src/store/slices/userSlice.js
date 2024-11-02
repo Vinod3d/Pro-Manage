@@ -82,6 +82,7 @@ const userSlice = createSlice({
 
 
         checkSession: (state, action)=>{
+            console.log(action.payload.loggedIn)
             state.isAuthenticated = action.payload.loggedIn;
             state.user = action.payload.user || null;
         },

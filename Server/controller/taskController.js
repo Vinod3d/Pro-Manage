@@ -2,10 +2,14 @@ import Task from '../models/taskSchema.js'
 import CustomErrorHandler from '../services/CustomErrorHandler.js';
 
 export const createTask = async(req, res, next)=>{
-    const { taskTitle, priorityLevel, assignedTo, checklistItems, dueDate, creator } = req.body;
+    const { taskTitle, priorityLevel, assignedTo, checklistItems, dueDate } = req.body;
 
-    if (!taskTitle || !priorityLevel) {
-        return next(CustomErrorHandler.badRequest("Task title and priority level are required."));
+    if (!taskTitle) {
+        return next(CustomErrorHandler.badRequest("Task title are required."));
+    }
+
+    if (!checklistItems || checklistItems.length === 0 || !checklistItems.some(item => item.text.trim() !== "")) {
+        return next(CustomErrorHandler.badRequest("Add at least one checklist with text"));
     }
 
     const formattedChecklistItems = (checklistItems || []).map(item => ({
