@@ -33,16 +33,10 @@ const TaskCard = ({ task, onEdit, onDelete, isCollapsed, setCollapsedAll }) => {
 
     const handleMouseLeave = () => setShowTooltip(false);
 
-
     // toggle menu
     const toggleMenu = (event) => {
         event.stopPropagation();
-        
-        if (isMenuOpen) {
-            setIsMenuOpen(false);
-        } else {
-            setIsMenuOpen(true);
-        }
+       setIsMenuOpen(prev => !prev);
     };
 
     useEffect(() => {
@@ -176,7 +170,7 @@ const TaskCard = ({ task, onEdit, onDelete, isCollapsed, setCollapsedAll }) => {
                     <MdMoreHoriz size={24} />
                 </button>
                 {isMenuOpen && (
-                    <div className={StylesTaskCard.menu} ref={menuRef}>
+                    <div className={`${StylesTaskCard.menu} ${isMenuOpen ? StylesTaskCard.open : ''}`} ref={menuRef}>
                         <button onClick={handleEdit}>Edit</button>
                         <button onClick={handleShare}>Share</button>
                         <button onClick={handleDelete} style={{color:'#ff2121'}}>Delete</button>

@@ -6,6 +6,7 @@ import { addMember, clearErrors, clearLastAddedEmail, clearMessage } from '../..
 import { toast } from 'react-toastify';
 
 const AddPeopleModal = ({ onClose, isOpen }) => {
+  const [isClosing, setIsClosing] = useState(false);
   const [email, setEmail] = useState("");
   const dispatch = useDispatch();
   const { loading, error, message, lastAddedEmail } = useSelector((state) => state.user);
@@ -34,15 +35,20 @@ const AddPeopleModal = ({ onClose, isOpen }) => {
     }
   }, [error, message, dispatch]);
 
+  useEffect(() => {
+    if (!isOpen) setIsClosing(false);
+  }, [isOpen]);
+
   const handleClose = () => {
-    onClose();
+    setIsClosing(true);
+    setTimeout(onClose, 400);
     dispatch(clearLastAddedEmail())
     setEmail("");
   };
 
   return isOpen ? (
     <div className={Styles.modal}>
-      <div className={Styles.modalContent} onClick={(e) => e.stopPropagation()}>
+      <div className={`${Styles.modalContent} ${isClosing ? Styles.modalClose : Styles.modalOpen}`} onClick={(e) => e.stopPropagation()}>
         {lastAddedEmail ? (
           <div className={Styles.addedSuccess}>
             <div className={Styles.messages}>{lastAddedEmail} added to the board</div>
