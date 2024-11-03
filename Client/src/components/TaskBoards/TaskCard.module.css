@@ -62,14 +62,17 @@
     right: 18px;
     overflow: hidden;
     opacity: 0;
+    max-height: 0;
     transform: translateY(-10px);
-    transition: opacity 2s ease, transform 2s ease;
+    transition: opacity 0.2s ease, max-height 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
 }
 
-.open {
+.menu.open {
     opacity: 1;
+    max-height: 200px;
     transform: translateY(0);
-    transition-duration: 2s;
+    pointer-events: auto;
 }
 
 .menu button {

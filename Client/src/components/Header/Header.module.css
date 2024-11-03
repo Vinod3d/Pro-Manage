@@ -79,8 +79,9 @@
     top: 110%;
     left: 0;
     width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
+    max-height: 0; /* Initially collapsed */
+    opacity: 0; /* Initially invisible */
+    /* overflow-y: hidden; Hide content when collapsed */
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 10px;
@@ -89,7 +90,16 @@
     padding: 0;
     margin: 0;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  }
+    transition: max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(-10px); /* Initial position */
+}
+
+.dropdownList.open {
+    max-height: 200px; /* Expanded height */
+    opacity: 1; /* Fully visible */
+    /* overflow-y: auto; Enable scroll when opened */
+    transform: translateY(0); /* Moves back to original position */
+}
   
   .dropdownItem {
     padding: 10px;

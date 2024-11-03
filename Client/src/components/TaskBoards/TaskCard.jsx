@@ -169,13 +169,13 @@ const TaskCard = ({ task, onEdit, onDelete, isCollapsed, setCollapsedAll }) => {
                 <button className={StylesTaskCard.menuButton} onClick={toggleMenu}>
                     <MdMoreHoriz size={24} />
                 </button>
-                {isMenuOpen && (
+                
                     <div className={`${StylesTaskCard.menu} ${isMenuOpen ? StylesTaskCard.open : ''}`} ref={menuRef}>
                         <button onClick={handleEdit}>Edit</button>
                         <button onClick={handleShare}>Share</button>
                         <button onClick={handleDelete} style={{color:'#ff2121'}}>Delete</button>
                     </div>
-                )}
+               
             </div>
 
             <h4 

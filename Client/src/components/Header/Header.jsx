@@ -96,8 +96,8 @@ const Header = ({ selectedOption, handleSelectDate }) => {
             <div className={Styles.dropdownSelected}>
               {options.find((option) => option.value === selectedOption)?.label || 'Select an option'}<RiArrowDropDownLine className={Styles.selectIcon}/>
             </div>
-            {dropdownOpen && (
-              <ul className={Styles.dropdownList}>
+            
+              <ul className={`${Styles.dropdownList} ${dropdownOpen ? Styles.open : ''}`}>
                 {options.map((option) => (
                   <li
                     key={option.value}
@@ -108,7 +108,7 @@ const Header = ({ selectedOption, handleSelectDate }) => {
                   </li>
                 ))}
               </ul>
-            )}
+            
           </div>
         </div>
       </div>
